@@ -1,0 +1,403 @@
+{
+  "openapi": "3.0.3",
+  "info": {
+    "title": "API Documentation of Online Course Website",
+    "description": "This is API documentation of the online course website created using Go-Lang. There are 7 groups of endpoints in this api documentation, including: (1) user endpoints, (2) author endpoints, (3) category endpoints, (4) course endpoints, (5) lesson-title endpoints, (6) lesson-content endpoints, and (7) transaction endpoints.",
+    "version": "1.0.0"
+  },
+  "servers": [
+    {
+      "url": "http://localhost:2802/api/v1"
+    }
+  ],
+  "paths": {
+    "/users": {
+      "post": {
+        "tags": ["User Endpoints"],
+        "summary": "Register a new user",
+        "description": "This endpoint is used for register a new user",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": ["name", "email", "password"],
+                "properties": {
+                  "name": {
+                    "type": "string",
+                    "example": "Bella Rizky Kharisma"
+                  },
+                  "email": {
+                    "type": "string",
+                    "example": "bella@example.com"
+                  },
+                  "password": {
+                    "type": "string",
+                    "example": "bella123"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Success response (first made, avatar and token fields is empty)",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UserResponseSuccess"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Error response if request body not as required",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BadRequestError"
+                }
+              }
+            }
+          }
+        }
+      },
+      "get": {
+        "security": [{
+          "UserAuth": []
+        }],
+        "tags": ["User Endpoints"],
+        "summary": "Get detail of user profile",
+        "description": "This endpoint is used for get a detail of user profile",
+        "responses": {
+          "200": {
+            "description": "Success response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UserResponseSuccess"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Error response if user not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/NotFoundError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/users/login": {
+      "post": {
+        "tags": ["User Endpoints"],
+        "summary": "Login user",
+        "description": "This endpoint is used for login user",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "required": ["email", "password"],
+                "properties": {
+                  "email": {
+                    "type": "string",
+                    "example": "bella@example.com"
+                  },
+                  "password": {
+                    "type": "string",
+                    "example": "bella123"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Success response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UserResponseSuccess"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Error response if request body not as required",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BadRequestError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/users/avatars": {
+      "put": {
+        "security": [{
+          "UserAuth": []
+        }],
+        "tags": ["User Endpoints"],
+        "summary": "Upload avatar's user",
+        "description": "This endpoint is used for upload avatar's user",
+        "requestBody": {
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "type": "object",
+                "required": ["avatar"],
+                "properties": {
+                  "avatar": {
+                    "type": "string",
+                    "format": "binary",
+                    "example": "bella.png"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Success response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "code": {
+                      "type": "number",
+                      "example": 200
+                    },
+                    "status": {
+                      "type": "string",
+                      "example": "Your avatar has been uploaded"
+                    },
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "user": {
+                          "type": "string",
+                          "example": "Bella Rizky Kharisma"
+                        },
+                        "avatar": {
+                          "type": "string",
+                          "example": "assets/images/avatars/bella.png"
+                        },
+                        "is_uploaded": {
+                          "type": "boolean",
+                          "example": true
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Error response if invalid authorization token",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UnauthorizedError"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Error response user not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/NotFoundError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/users/logout": {
+      "post": {
+        "security": [{
+          "UserAuth": []
+        }],
+        "tags": ["User Endpoints"],
+        "summary": "Logout user",
+        "description": "This endpoint is used for user logout",
+        "responses": {
+          "200": {
+            "description": "Success response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "code": {
+                      "type": "number",
+                      "example": 200
+                    },
+                    "status": {
+                      "type": "string",
+                      "example": "You're successfully logged out"
+                    },
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "user": {
+                          "type": "string",
+                          "example": "Bella Rizky Kharisma"
+                        },
+                        "token": {
+                          "type": "string",
+                          "example": ""
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Error response if invalid authorization token",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UnauthorizedError"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "securitySchemes": {
+      "UserAuth": {
+        "description": "Authentication for user endpoints",
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "JWT"
+      }
+    },
+    "schemas": {
+      "UserResponseSuccess": {
+        "type": "object",
+        "properties": {
+          "code": {
+            "type": "number",
+            "example": 200
+          },
+          "status": {
+            "type": "string",
+            "example": "OK"
+          },
+          "data": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "number",
+                "example": 1
+              },
+              "name": {
+                "type": "string",
+                "example": "Bella Rizky Kharisma"
+              },
+              "email": {
+                "type": "string",
+                "example": "bella@example.com"
+              },
+              "avatar": {
+                "type": "string",
+                "required": null,
+                "example": "assets/images/avatars/bella.png"
+              },
+              "token": {
+                "type": "string",
+                "required": null,
+                "example": "this.jwt.token"
+              }
+            }
+          }
+        }
+      },
+      "BadRequestError": {
+        "type": "object",
+        "properties": {
+          "code": {
+            "type": "number",
+            "example": 400
+          },
+          "status": {
+            "type": "string",
+            "example": "Bad Request"
+          },
+          "data": {
+            "type": "object",
+            "properties": {
+              "errors": {
+                "type": "string",
+                "example": "bad request error message"
+              }
+            }
+          }
+        }
+      },
+      "UnauthorizedError": {
+        "type": "object",
+        "properties": {
+          "code": {
+            "type": "number",
+            "example": 401
+          },
+          "status": {
+            "type": "string",
+            "example": "Unauthorized"
+          },
+          "data": {
+            "type": "object",
+            "properties": {
+              "errors": {
+                "type": "string",
+                "example": "unauthorized error message"
+              }
+            }
+          }
+        }
+      },
+      "NotFoundError": {
+        "type": "object",
+        "properties": {
+          "code": {
+            "type": "number",
+            "example": 404
+          },
+          "status": {
+            "type": "string",
+            "example": "Not Found"
+          },
+          "data": {
+            "type": "object",
+            "properties": {
+              "errors": {
+                "type": "string",
+                "example": "not found error message"
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
