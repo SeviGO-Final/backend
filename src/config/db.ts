@@ -4,11 +4,10 @@ const connectToDatabase = async (): Promise<void> => {
     if (!process.env.MONGO_URI) {
       throw new Error('MONGO_URI is undefined. Check for mongo_URI');
     }
-    await mongoose.connect(process.env.MONGO_URI, {
-    });
+    await mongoose.connect(process.env.MONGO_URI, {});
     console.log('Connected to MongoDB Atlas');
   } catch (error) {
-    console.error('Connection error', error);
+    console.error('Connection error: ', error);
   }
 };
 

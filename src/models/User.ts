@@ -1,6 +1,7 @@
-import mongoose, { Document, Schema } from 'mongoose';
-interface IUser extends Document {
-    nik: number;
+import mongoose, { Document, Schema, Types } from 'mongoose';
+export interface IUser extends Document {
+    _id: Types.ObjectId;
+    nik: string;
     name: string;
     email: string;
     password: string;
@@ -10,7 +11,7 @@ interface IUser extends Document {
 }
 const userSchema: Schema<IUser> = new Schema(
     {
-        nik: { type: Number, required: true },
+        nik: { type: String, required: true },
         name: { type: String, required: true },
         email: { type: String, required: true, unique: true },
         password: { type: String, required: true },

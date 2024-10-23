@@ -3,7 +3,7 @@
 
 ## Installation
 
-install Depedency (npm install).
+install Dependency (npm install).
 
 ```bash
 npm install
