@@ -1,4 +1,6 @@
 import express, { Application } from 'express';
+import cors from 'cors';
+import corsOptions from './config/corsConfig';
 import dotenv from 'dotenv';
 import connectDB from './config/db';
 import bodyParser from 'body-parser';
@@ -9,10 +11,12 @@ dotenv.config();
 const app: Application = express();
 const port = 3000;
 
+app.use(cors(corsOptions));
+app.options('*', cors(corsOptions));
+app.use(bodyParser.json());
+
 // database connecting
 connectDB();
-
-app.use(bodyParser.json());
 
 // routing for login or register
 app.use('/api', publicRoutes);
