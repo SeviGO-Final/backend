@@ -4,11 +4,11 @@ import corsOptions from './config/corsConfig';
 import dotenv from 'dotenv';
 import connectDB from './config/db';
 import bodyParser from 'body-parser';
-import publicRoutes from './routes/auth_route';
+import publicRoutes from './routes/public-route';
 import {ErrorMiddleware} from "./middlewares/error-middleware";
 dotenv.config(); 
 
-const app: Application = express();
+export const app: Application = express();
 const port = 3000;
 
 app.use(cors(corsOptions));

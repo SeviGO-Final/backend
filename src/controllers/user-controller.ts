@@ -1,16 +1,16 @@
 import { Request, Response, NextFunction } from 'express';
 import {LoginUserRequest, RegisterUserRequest} from "../formatters/user-formatter";
-import {AuthService} from "../services/auth-service";
+import {UserService} from "../services/user-service";
 import {toAPIResponse} from "../formatters/api-response";
 
-export class AuthController {
+export class UserController {
     static async register(req: Request, res: Response, next: NextFunction): Promise<void> {
         try {
             // parsing the request body to RegisterUserRequest format
             const request = req.body as RegisterUserRequest;
 
             // Memanggil fungsi service
-            const user = await AuthService.register(request)
+            const user = await UserService.register(request)
 
             res.status(201).json(
                 toAPIResponse(201, "Created", user, "User registered, pending admin verification")
@@ -27,7 +27,7 @@ export class AuthController {
             const request = req.body as LoginUserRequest;
 
             // Memanggil fungsi service
-            const user = await AuthService.login(request);
+            const user = await UserService.login(request);
             res.status(200).json(
                 toAPIResponse(200, "OK", user, "You're logged in")
             );

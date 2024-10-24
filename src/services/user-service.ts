@@ -6,7 +6,7 @@ import {Validation} from "../validations/schema";
 import {UserValidation} from "../validations/user-validation";
 import {CustomErrors} from "../exceptions/custom-errors";
 
-export class AuthService {
+export class UserService {
     static async register(request: RegisterUserRequest): Promise<UserResponse> {
         // validating the request body, if error will return ZodError
         const requestValidated = Validation.validate(UserValidation.REGISTER, request);
