@@ -13,3 +13,9 @@ npm install
 ```bash
 npm run dev
 ```
+
+## Integration testing
+Ensure that you're connected to MongoDB, then:
+```bash
+npm run test
+```

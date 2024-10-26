@@ -5,7 +5,7 @@ import bcrypt from "bcryptjs";
 export class TestUtil {
     static async deleteUsers() {
         try {
-            const result  = await User.deleteMany({});
+            const result = await User.deleteMany({});
             console.log(`${result.deletedCount} users has been deleted`);
         } catch (e) {
             console.error('Error deleting users:', e.message);
@@ -23,7 +23,9 @@ export class TestUtil {
             });
 
             await newUser.save();
-            console.log('User created and collection initialized!');
+            console.log('User successfully created');
+
+            return newUser;
         } catch (e) {
             console.error('Error creating user:', e.message);
         }

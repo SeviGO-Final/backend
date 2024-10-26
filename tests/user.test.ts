@@ -3,7 +3,7 @@ import supertest from "supertest";
 import {app} from "../src";
 import {TestUtil} from "./test-util";
 
-describe("POST /users", () => {
+describe("POST /api/users", () => {
     afterEach(async () => {
         await TestUtil.deleteUsers();
     });
