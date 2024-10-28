@@ -7,6 +7,7 @@ import dotenv from 'dotenv';
 import connectDB from './config/db';
 import bodyParser from 'body-parser';
 import publicRoutes from './routes/public-route';
+import categoryRoutes from './routes/category-routes';
 import {ErrorMiddleware} from "./middlewares/error-middleware";
 dotenv.config(); 
 
@@ -23,6 +24,7 @@ connectDB();
 
 // routing for login or register
 app.use('/api', publicRoutes);
+app.use('/api/categories', categoryRoutes);
 
 // errors handling middleware
 app.use(ErrorMiddleware);
