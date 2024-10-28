@@ -8,4 +8,4 @@ uploads/
 .DS_Store
 *.tsbuildinfo
 .idea
-notes.md
+notes/

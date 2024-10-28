@@ -1,16 +1,16 @@
 // @ts-ignore
 import supertest from "supertest";
-import {app} from "../src";
+import {app} from "../../src";
 import {TestUtil} from "./test-util";
 
-describe("POST /api/users", () => {
+describe("POST /api/users/register", () => {
     afterEach(async () => {
         await TestUtil.deleteUsers();
     });
 
     it("Should can register a new users", async () => {
         const res = await supertest(app)
-            .post("/api/users")
+            .post("/api/users/register")
             .send({
                 nik: "1267386729476297",
                 name: "test",
@@ -24,7 +24,7 @@ describe("POST /api/users", () => {
 
     it("Should fail to register (422)", async () => {
         const res = await supertest(app)
-            .post("/api/users")
+            .post("/api/users/register")
             .send({
                 nik: "",
                 name: "test",

@@ -24,10 +24,9 @@ export class UserService {
 
         const hashedPassword = await bcrypt.hash(password, 10);
 
-        const newUser = new User({ name, email, password: hashedPassword, nik });
-        await newUser.save();
+        const newUser = await new User({ name, email, password: hashedPassword, nik }).save();
 
-        return toUserResponse(newUser.toObject());
+        return toUserResponse(newUser);
     }
 
     static async login(request: LoginUserRequest): Promise<UserResponse> {
@@ -42,15 +41,14 @@ export class UserService {
 
         const isMatch = await bcrypt.compare(password, user.password);
         if (!isMatch) {
-            throw new CustomErrors(401, "Unauthorized", "Invalid credentials");
+            throw new CustomErrors(401, "Unauthorized", "Email or password is wrong");
         }
 
         const token = jwt.sign({ id: user._id, role: user.role }, process.env.JWT_SECRET!, { expiresIn: '1h' });
 
-        const response = toUserResponse(user.toObject());
+        const response = toUserResponse(user);
         response.token = token;
 
         return response;
     }
 }
-

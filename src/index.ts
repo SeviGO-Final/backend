@@ -1,4 +1,6 @@
 import express, { Application } from 'express';
+import swaggerUi from "swagger-ui-express";
+import swaggerSpec from "./routes/docs-route";
 import cors from 'cors';
 import corsOptions from './config/corsConfig';
 import dotenv from 'dotenv';
@@ -14,6 +16,7 @@ const port = 3000;
 app.use(cors(corsOptions));
 app.options('*', cors(corsOptions));
 app.use(bodyParser.json());
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 
 // database connecting
 connectDB();
