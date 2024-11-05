@@ -36,4 +36,14 @@ export class UserController {
             next(error);
         }
     }
+
+    static async verifyAccount(req: Request, res: Response, next: NextFunction): Promise<void> {
+        try {
+            const { id } = req.params;
+            const user = await UserService.verifyUser(id);
+            res.status(200).json(toAPIResponse(200, 'Success', user, 'Account verified successfully'));
+        } catch (error) {
+            next(error);
+        }
+    }
 }

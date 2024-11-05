@@ -52,5 +52,19 @@ export class UserService {
 
         return response;
     }
+
+    static async verifyUser(userId: string) {
+        const user = await User.findById(userId).select('-password');
+
+        if (!user) {
+            throw new CustomErrors(404, "Not Found", "User not found");
+        }
+
+        user.is_verified = true;
+        await user.save();
+        
+        return user.toObject();
+    }
+    
 }
 
