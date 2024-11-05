@@ -5,7 +5,7 @@ import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 import {MockData} from "./mock-data";
 import {UserService} from "../../src/services/user-service";
-import {CustomErrors} from "../../src/exceptions/custom-errors";
+import {CustomErrors} from "../../src/types/custom-errors";
 import {ZodError} from "zod";
 
 jest.mock('../../src/models/User');

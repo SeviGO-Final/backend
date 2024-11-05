@@ -6,14 +6,24 @@ import corsOptions from './config/corsConfig';
 import dotenv from 'dotenv';
 import connectDB from './config/db';
 import bodyParser from 'body-parser';
-import publicRoutes from './routes/public-route';
+import userRoutes from './routes/user-routes';
 import categoryRoutes from './routes/category-routes';
 import {ErrorMiddleware} from "./middlewares/error-middleware";
-dotenv.config(); 
+import session from "express-session";
+import {getEnv} from "./utils/getenv";
+dotenv.config();
 
 export const app: Application = express();
 const port = 3000;
 
+app.use(session({
+  secret: getEnv('SESSION_SECRET'),
+  resave: false,
+  saveUninitialized: true,
+  cookie: {
+    secure: false, // set true if using HTTPS
+    httpOnly: true
+  }}));
 app.use(cors(corsOptions));
 app.options('*', cors(corsOptions));
 app.use(bodyParser.json());
@@ -22,8 +32,8 @@ app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 // database connecting
 connectDB();
 
-// routing for login or register
-app.use('/api', publicRoutes);
+// routes
+app.use('/api/users', userRoutes);
 app.use('/api/categories', categoryRoutes);
 
 // errors handling middleware

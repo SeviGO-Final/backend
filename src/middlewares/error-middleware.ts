@@ -1,6 +1,6 @@
 import { Request, Response, NextFunction } from "express";
 import { ZodError } from "zod";
-import { CustomErrors } from "../exceptions/custom-errors";
+import { CustomErrors } from "../types/custom-errors";
 import { validationErrorFormatter } from "../formatters/validation-formatter";
 
 export async function ErrorMiddleware(err: any, req: Request, res: Response, next: NextFunction): Promise<void> {
@@ -24,6 +24,7 @@ export async function ErrorMiddleware(err: any, req: Request, res: Response, nex
             errors: `${duplicatedField} must be unique`
         });
     } else {
+        console.error(err);
         res.status(500).json({
             code: 500,
             status: "Internal Server Error",

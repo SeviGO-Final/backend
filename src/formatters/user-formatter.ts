@@ -22,6 +22,11 @@ export type UserResponse = {
     token?: string
 }
 
+export type UserJwtPayload  = {
+    _id: string;
+    role: string;
+}
+
 export function toUserResponse(user: IUser): UserResponse {
     return {
         _id: user._id.toString(),

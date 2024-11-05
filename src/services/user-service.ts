@@ -1,10 +1,17 @@
 import User from '../models/User'; // Adjust the import path as needed
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
-import {LoginUserRequest, RegisterUserRequest, toUserResponse, UserResponse} from "../formatters/user-formatter";
+import {
+    LoginUserRequest,
+    RegisterUserRequest,
+    toUserResponse,
+    UserJwtPayload,
+    UserResponse
+} from "../formatters/user-formatter";
 import {Validation} from "../validations/schema";
 import {UserValidation} from "../validations/user-validation";
-import {CustomErrors} from "../exceptions/custom-errors";
+import {CustomErrors} from "../types/custom-errors";
+import {getEnv} from "../utils/getenv";
 
 export class UserService {
     static async register(request: RegisterUserRequest): Promise<UserResponse> {
@@ -44,7 +51,11 @@ export class UserService {
             throw new CustomErrors(401, "Unauthorized", "Email or password is wrong");
         }
 
-        const token = jwt.sign({ id: user._id, role: user.role }, process.env.JWT_SECRET!, { expiresIn: '1h' });
+        const jwtPayload: UserJwtPayload = {
+            _id: user._id.toString(),
+            role: user.role,
+        }
+        const token = jwt.sign(jwtPayload, getEnv('JWT_SECRET'), { expiresIn: '1d' });
 
         const response = toUserResponse(user);
         response.token = token;
@@ -52,7 +63,18 @@ export class UserService {
         return response;
     }
 
-    static async verifyUser(userId: string) {
+    static async verifyUser(userId: string, adminId: string) {
+        // memastikan hanya admin yang bisa melakukan verifikasi akun user
+        const isAdmin = await User.findById(adminId).select('role');
+        if (!isAdmin) {
+            throw new CustomErrors(404, 'Not Found', 'Admin user not found');
+        }
+
+        if (isAdmin.role !== 'admin') {
+            throw new CustomErrors(403, 'Forbidden', 'Only admin can verify user accounts');
+        }
+
+        // jika benar-benar Admin
         const user = await User.findById(userId).select('-password');
 
         if (!user) {
@@ -62,7 +84,7 @@ export class UserService {
         user.is_verified = true;
         await user.save();
         
-        return user.toObject();
+        return toUserResponse(user);
     }
     
 }

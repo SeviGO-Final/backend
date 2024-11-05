@@ -11,7 +11,7 @@ const corsOptions: CorsOptions = {
       callback(new Error(`CORS error: Origin ${origin} is not allowed by CORS policy`));
     }
   },
-  methods: ['GET', 'POST', 'PUT', 'DELETE'], 
+  methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE'],
   credentials: true, 
   optionsSuccessStatus: 200, 
 };
