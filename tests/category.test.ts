@@ -1,10 +1,13 @@
+// @ts-ignore
 import request from 'supertest';
 import {app} from "../src";
 import mongoose from 'mongoose';
 import { Category } from '../src/models/Category';
 
 describe('Category CRUD Operations', () => {
+
   beforeAll(async () => {
+    await Category.deleteMany({});
     await mongoose.connect(process.env.MONGO_URI || '', { 
     });
   });

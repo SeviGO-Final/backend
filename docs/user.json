@@ -1,19 +1,10 @@
 {
-  "openapi": "3.0.3",
-  "info": {
-    "title": "Users API Documentation",
-    "description": "The Users API provides endpoints for managing user-related operations within the application. These endpoints allow for the creation, retrieval, updating, and deletion of user accounts. Designed to be RESTful, the API supports JSON requests and responses for seamless integration with client applications.",
-    "version": "1.0.0"
-  },
-  "servers": [
-    {
-      "url": "http://localhost:3000/api"
-    }
-  ],
   "paths": {
-    "/users": {
+    "/users/register": {
       "post": {
-        "tags": ["User Endpoints"],
+        "tags": [
+          "User Endpoints"
+        ],
         "summary": "Create a new user",
         "description": "This endpoint is used for register a new user",
         "requestBody": {
@@ -21,7 +12,12 @@
             "application/json": {
               "schema": {
                 "type": "object",
-                "required": ["nik", "name", "email", "password"],
+                "required": [
+                  "nik",
+                  "name",
+                  "email",
+                  "password"
+                ],
                 "properties": {
                   "nik": {
                     "type": "string",
@@ -101,7 +97,9 @@
     },
     "/users/login": {
       "post": {
-        "tags": ["User Endpoints"],
+        "tags": [
+          "User Endpoints"
+        ],
         "summary": "Login user",
         "description": "The user has been successfully authenticated, and an access token is returned.",
         "requestBody": {

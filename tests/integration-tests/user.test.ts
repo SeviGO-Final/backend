@@ -1,9 +1,9 @@
 // @ts-ignore
 import supertest from "supertest";
-import {app} from "../src";
+import {app} from "../../src";
 import {TestUtil} from "./test-util";
 
-describe("POST /api/users", () => {
+describe("POST /api/users/register", () => {
     afterEach(async () => {
         await TestUtil.deleteUsers();
     });
