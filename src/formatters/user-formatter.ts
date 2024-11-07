@@ -22,7 +22,7 @@ export type UserResponse = {
     token?: string
 }
 
-export type UserJwtPayload  = {
+export type UserSessionData = {
     _id: string;
     role: string;
 }

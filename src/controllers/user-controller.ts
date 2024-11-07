@@ -1,5 +1,5 @@
 import { Request, Response, NextFunction } from 'express';
-import {LoginUserRequest, RegisterUserRequest, UserJwtPayload} from "../formatters/user-formatter";
+import {LoginUserRequest, RegisterUserRequest, UserSessionData} from "../formatters/user-formatter";
 import {UserService} from "../services/user-service";
 import {toAPIResponse} from "../formatters/api-response";
 import {CustomRequest} from "../types/custom-request";
@@ -41,10 +41,12 @@ export class UserController {
     static async verifyAccount(req: CustomRequest, res: Response, next: NextFunction): Promise<void> {
         try {
             const userId = req.params.id;
-            const adminId = (req.session.user as UserJwtPayload)._id;
+            const sessionData = (req.session.user as UserSessionData);
 
-            const user = await UserService.verifyUser(userId, adminId);
-            res.status(200).json(toAPIResponse(200, 'OK', user, 'Account verified successfully'));
+            const user = await UserService.verifyUser(userId, sessionData);
+            res.status(200).json(
+                toAPIResponse(200, 'OK', user, 'Account verified successfully')
+            );
         } catch (error) {
             next(error);
         }

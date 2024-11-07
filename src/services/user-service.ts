@@ -5,7 +5,7 @@ import {
     LoginUserRequest,
     RegisterUserRequest,
     toUserResponse,
-    UserJwtPayload,
+    UserSessionData,
     UserResponse
 } from "../formatters/user-formatter";
 import {Validation} from "../validations/schema";
@@ -51,7 +51,7 @@ export class UserService {
             throw new CustomErrors(401, "Unauthorized", "Email or password is wrong");
         }
 
-        const jwtPayload: UserJwtPayload = {
+        const jwtPayload: UserSessionData = {
             _id: user._id.toString(),
             role: user.role,
         }
@@ -63,14 +63,9 @@ export class UserService {
         return response;
     }
 
-    static async verifyUser(userId: string, adminId: string) {
+    static async verifyUser(userId: string, sessionData: UserSessionData) {
         // memastikan hanya admin yang bisa melakukan verifikasi akun user
-        const isAdmin = await User.findById(adminId).select('role');
-        if (!isAdmin) {
-            throw new CustomErrors(404, 'Not Found', 'Admin user not found');
-        }
-
-        if (isAdmin.role !== 'admin') {
+        if (sessionData.role !== 'admin') {
             throw new CustomErrors(403, 'Forbidden', 'Only admin can verify user accounts');
         }
 

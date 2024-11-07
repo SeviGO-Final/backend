@@ -11,6 +11,7 @@ import categoryRoutes from './routes/category-routes';
 import {ErrorMiddleware} from "./middlewares/error-middleware";
 import session from "express-session";
 import {getEnv} from "./utils/getenv";
+import {complaintRoutes} from "./routes/complaint-routes";
 dotenv.config();
 
 export const app: Application = express();
@@ -35,6 +36,7 @@ connectDB();
 // routes
 app.use('/api/users', userRoutes);
 app.use('/api/categories', categoryRoutes);
+app.use('/api/complaints', complaintRoutes);
 
 // errors handling middleware
 app.use(ErrorMiddleware);

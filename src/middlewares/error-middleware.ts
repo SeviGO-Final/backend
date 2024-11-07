@@ -24,7 +24,7 @@ export async function ErrorMiddleware(err: any, req: Request, res: Response, nex
             errors: `${duplicatedField} must be unique`
         });
     } else {
-        console.error(err);
+        console.error(err.message);
         res.status(500).json({
             code: 500,
             status: "Internal Server Error",
