@@ -20,6 +20,7 @@ export type UserResponse = {
     role: string
     is_verified: boolean
     token?: string
+    complaints?: any
 }
 
 export type UserSessionData = {

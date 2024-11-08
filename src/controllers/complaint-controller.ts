@@ -35,19 +35,6 @@ export class ComplaintController {
         }
     }
 
-    static async getByUserId(req: CustomRequest, res: Response, next: NextFunction) {
-        try {
-            const userId = (req.session.user as UserSessionData)._id;
-            console.log(userId);
-            const complaints = await ComplaintService.getByUserId(userId);
-            res.status(200).json(
-                toAPIResponse(200, 'OK', complaints, 'Complaints found')
-            );
-        } catch (e) {
-            next(e);
-        }
-    }
-
     static async update(req: CustomRequest, res: Response, next: NextFunction) {
         try {
             const userId = (req.session.user as UserSessionData)._id;

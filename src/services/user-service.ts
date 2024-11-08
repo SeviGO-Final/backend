@@ -12,6 +12,9 @@ import {Validation} from "../validations/schema";
 import {UserValidation} from "../validations/user-validation";
 import {CustomErrors} from "../types/custom-errors";
 import {getEnv} from "../utils/getenv";
+import {Types} from "mongoose";
+import {Complaint} from "../models/Complaint";
+import {toComplaintResponses} from "../formatters/complaint-formatter";
 
 export class UserService {
     static async register(request: RegisterUserRequest): Promise<UserResponse> {
@@ -80,6 +83,28 @@ export class UserService {
         await user.save();
         
         return toUserResponse(user);
+    }
+
+    static async getComplaintsByUserId(userId: string) {
+        // Validasi userId agar valid dan bisa dikonversi ke ObjectId
+        if (!Types.ObjectId.isValid(userId)) {
+            throw new Error("Invalid user ID format");
+        }
+
+        const user = await User.findById(userId);
+        if (!user) {
+            throw new CustomErrors(404, "Not Found", "User not found");
+        }
+
+        const complaints = await Complaint.find({
+          user: userId,
+          is_deleted: false,
+        });
+
+        const response = toUserResponse(user);
+        response.complaints = toComplaintResponses(complaints);
+
+        return response;
     }
     
 }

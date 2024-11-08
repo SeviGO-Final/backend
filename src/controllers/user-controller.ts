@@ -51,4 +51,17 @@ export class UserController {
             next(error);
         }
     }
+
+    static async getComplaintsByUserId(req: CustomRequest, res: Response, next: NextFunction) {
+        try {
+            const userId = (req.session.user as UserSessionData)._id;
+            const complaints = await UserService.getComplaintsByUserId(userId);
+
+            res.status(200).json(
+                toAPIResponse(200, 'OK', complaints, `Complaints found: ${complaints.complaints.length}`)
+            );
+        } catch (e) {
+            next(e);
+        }
+    }
 }

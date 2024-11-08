@@ -6,6 +6,7 @@ import corsOptions from './config/corsConfig';
 import dotenv from 'dotenv';
 import connectDB from './config/db';
 import bodyParser from 'body-parser';
+import morgan from "morgan";
 import userRoutes from './routes/user-routes';
 import categoryRoutes from './routes/category-routes';
 import {ErrorMiddleware} from "./middlewares/error-middleware";
@@ -28,6 +29,7 @@ app.use(session({
 app.use(cors(corsOptions));
 app.options('*', cors(corsOptions));
 app.use(bodyParser.json());
+app.use(morgan('dev'));
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 
 // database connecting

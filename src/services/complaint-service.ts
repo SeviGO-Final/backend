@@ -7,7 +7,6 @@ import {ComplaintValidation} from "../validations/complaint-validation";
 import {CustomErrors} from "../types/custom-errors";
 import {TrackingStatus} from "../models/TrackingStatus";
 import {isExistsComplaint, MAX_SIZE, slugGenerate} from "../utils/complaint-service";
-import {Types} from "mongoose";
 
 export class ComplaintService {
     static async create(file: Express.Multer.File | undefined, request: CreateOrUpdateComplaint, userId: string) {
@@ -73,22 +72,6 @@ export class ComplaintService {
         response.tracking_status = trackingStatus;
 
         return response;
-    }
-
-    static async getByUserId(userId: string) {
-        // Validasi userId agar valid dan bisa dikonversi ke ObjectId
-        if (!Types.ObjectId.isValid(userId)) {
-            throw new Error("Invalid user ID format");
-        }
-
-        const userObjectId = new Types.ObjectId(userId);
-
-        const complaints = await Complaint.find({
-            user: userObjectId,
-            is_deleted: false,
-        });
-
-        return toComplaintResponses(complaints);
     }
 
     static async update(complaintId: string, file: Express.Multer.File | undefined, request: CreateOrUpdateComplaint, userId: string) {
