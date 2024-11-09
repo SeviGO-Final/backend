@@ -13,6 +13,8 @@ const trackingStatusSchema = new Schema<ITrackingStatus>({
     notes: { type: String, required: false },
     complaint: { type: Schema.Types.ObjectId, ref: 'Complaint', required: true },
     admin: { type: Schema.Types.ObjectId, ref: 'User', required: false },
-}, { timestamps: true });
+}, {
+    timestamps: true }
+);
 
 export const TrackingStatus = model<ITrackingStatus>('TrackingStatus', trackingStatusSchema);

@@ -52,13 +52,25 @@ export class ComplaintController {
         }
     }
 
-    static async deleteHistories(req: CustomRequest, res: Response, next: NextFunction) {
+    static async deleteAllHistories(req: CustomRequest, res: Response, next: NextFunction) {
+        try {
+            const userId = (req.session.user as UserSessionData)._id;
+            const deleteHistory = await ComplaintService.deleteAllHistories(userId);
+            res.status(200).json(
+                toAPIResponse(200, 'OK', deleteHistory, "Complaint's histories deleted")
+            );
+        } catch (e) {
+            next(e);
+        }
+    }
+
+    static async deleteOneHistory(req: CustomRequest, res: Response, next: NextFunction) {
         try {
             const userId = (req.session.user as UserSessionData)._id;
             const complaintId = req.params.id;
-            await ComplaintService.deleteHistories(complaintId, userId);
+            const deleteHistory = await ComplaintService.deleteOneHistory(complaintId, userId);
             res.status(200).json(
-                toAPIResponse(200, 'OK', null, "Complaint's histories deleted")
+                toAPIResponse(200, 'OK', deleteHistory, "Complaint's history deleted")
             );
         } catch (e) {
             next(e);
@@ -69,9 +81,9 @@ export class ComplaintController {
         try {
             const userId = (req.session.user as UserSessionData)._id;
             const complaintId = req.params.id;
-            await ComplaintService.delete(complaintId, userId);
+            const deletedComplaint = await ComplaintService.delete(complaintId, userId);
             res.status(200).json(
-                toAPIResponse(200, 'OK', null, 'Complaint deleted')
+                toAPIResponse(200, 'OK', deletedComplaint, 'Complaint deleted')
             );
         } catch (e) {
             next(e);

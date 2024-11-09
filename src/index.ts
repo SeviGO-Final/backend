@@ -4,7 +4,7 @@ import swaggerSpec from "./routes/docs-route";
 import cors from 'cors';
 import corsOptions from './config/corsConfig';
 import dotenv from 'dotenv';
-import connectDB from './config/db';
+import configDB from './config/db';
 import bodyParser from 'body-parser';
 import morgan from "morgan";
 import userRoutes from './routes/user-routes';
@@ -13,6 +13,7 @@ import {ErrorMiddleware} from "./middlewares/error-middleware";
 import session from "express-session";
 import {getEnv} from "./utils/getenv";
 import {complaintRoutes} from "./routes/complaint-routes";
+import {adminFeedbackRoutes} from "./routes/admin-feedback-routes";
 dotenv.config();
 
 export const app: Application = express();
@@ -33,12 +34,14 @@ app.use(morgan('dev'));
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 
 // database connecting
-connectDB();
+configDB.connectToDatabase();
+configDB.adminSeeder();
 
 // routes
 app.use('/api/users', userRoutes);
 app.use('/api/categories', categoryRoutes);
 app.use('/api/complaints', complaintRoutes);
+app.use('/api/admin-feedback', adminFeedbackRoutes);
 
 // errors handling middleware
 app.use(ErrorMiddleware);

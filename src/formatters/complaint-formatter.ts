@@ -1,4 +1,5 @@
 import {IComplaint} from "../models/Complaint";
+import {ITrackingStatus} from "../models/TrackingStatus";
 
 export type CreateOrUpdateComplaint = {
     title: string;
@@ -12,6 +13,13 @@ export type CreateOrUpdateComplaint = {
     user?: string;
 }
 
+export type TrackingStatusResponse = {
+    _id: string;
+    status: string;
+    notes: string;
+    updated_at?: string;
+}
+
 export type ComplaintResponse = {
     _id: string;
     title: string;
@@ -20,10 +28,27 @@ export type ComplaintResponse = {
     location: string;
     evidence: string;
     current_status: string;
-    tracking_status?: object;
+    tracking_status?: TrackingStatusResponse[];
     is_deleted: boolean;
     created_at?: string,
     updated_at?: string
+}
+
+export function toTrackingStatusResponse(trackingStatus: any): TrackingStatusResponse {
+    return {
+        _id: trackingStatus._id.toString(),
+        status: trackingStatus.status,
+        notes: trackingStatus.notes,
+        updated_at: trackingStatus.updatedAt?.toLocaleString(),
+    }
+}
+
+export function toTrackingStatusResponses(trackingStatuses: any): TrackingStatusResponse[] {
+    const trackingStatusResponses: TrackingStatusResponse[] = [];
+    for (const trackingStatus of trackingStatuses) {
+        trackingStatusResponses.push(toTrackingStatusResponse(trackingStatus));
+    }
+    return trackingStatusResponses;
 }
 
 export function toComplaintResponse(complaint: IComplaint): ComplaintResponse {

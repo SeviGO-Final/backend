@@ -15,6 +15,7 @@ import {getEnv} from "../utils/getenv";
 import {Types} from "mongoose";
 import {Complaint} from "../models/Complaint";
 import {toComplaintResponses} from "../formatters/complaint-formatter";
+import {ServiceUtils} from "../utils/service-utils";
 
 export class UserService {
     static async register(request: RegisterUserRequest): Promise<UserResponse> {
@@ -68,9 +69,7 @@ export class UserService {
 
     static async verifyUser(userId: string, sessionData: UserSessionData) {
         // memastikan hanya admin yang bisa melakukan verifikasi akun user
-        if (sessionData.role !== 'admin') {
-            throw new CustomErrors(403, 'Forbidden', 'Only admin can verify user accounts');
-        }
+        ServiceUtils.onlyAdminCan(sessionData, 'Only admin can verify user accounts');
 
         // jika benar-benar Admin
         const user = await User.findById(userId).select('-password');
@@ -86,10 +85,7 @@ export class UserService {
     }
 
     static async getComplaintsByUserId(userId: string) {
-        // Validasi userId agar valid dan bisa dikonversi ke ObjectId
-        if (!Types.ObjectId.isValid(userId)) {
-            throw new Error("Invalid user ID format");
-        }
+        ServiceUtils.isValidObjectId(userId);
 
         const user = await User.findById(userId);
         if (!user) {
