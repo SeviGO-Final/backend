@@ -5,7 +5,8 @@ export interface IUser extends Document {
     name: string;
     email: string;
     password: string;
-    avatar: string | null;
+    address?: string | null;
+    avatar?: string | null;
     role: string;
     is_verified: boolean;
 }
@@ -15,6 +16,7 @@ const userSchema: Schema<IUser> = new Schema(
         name: { type: String, required: true },
         email: { type: String, required: true, unique: true },
         password: { type: String, required: true },
+        address: { type: String, default: null },
         avatar: { type: String, default: null }, // Default ke null
         role: { type: String, default: 'user' }, // 'user' or 'admin'
         is_verified: { type: Boolean, default: false },

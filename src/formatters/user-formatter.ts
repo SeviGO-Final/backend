@@ -7,6 +7,16 @@ export type RegisterUserRequest = {
     password: string
 }
 
+export type UpdateUserRequest = {
+    name: string,
+    email: string,
+    avatar?: string,
+    address?: string,
+    old_password?: string;
+    new_password?: string;
+    confirm_password?: string;
+}
+
 export type LoginUserRequest = {
     email: string,
     password: string
@@ -17,10 +27,12 @@ export type UserResponse = {
     nik: string,
     name: string,
     email: string,
-    role: string
-    is_verified: boolean
-    token?: string
-    complaints?: any
+    role: string;
+    is_verified: boolean;
+    avatar?: string;
+    address?: string;
+    token?: string;
+    complaints?: any;
 }
 
 export type UserSessionData = {

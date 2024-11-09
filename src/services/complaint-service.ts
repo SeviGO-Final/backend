@@ -37,7 +37,7 @@ export class ComplaintService {
         const uploadDir = path.join(__dirname, '../../uploads/complaints');
         const filePath = path.join(__dirname, '../../uploads/complaints', `${Date.now()}-${file.originalname}`);
         if (!fs.existsSync(uploadDir)) {
-            await fs.mkdirSync(uploadDir, { recursive: true });
+            fs.mkdirSync(uploadDir, { recursive: true });
         }
 
         try {

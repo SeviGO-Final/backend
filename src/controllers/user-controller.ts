@@ -1,5 +1,5 @@
 import { Request, Response, NextFunction } from 'express';
-import {LoginUserRequest, RegisterUserRequest, UserSessionData} from "../formatters/user-formatter";
+import {LoginUserRequest, RegisterUserRequest, UpdateUserRequest, UserSessionData} from "../formatters/user-formatter";
 import {UserService} from "../services/user-service";
 import {toAPIResponse} from "../formatters/api-response";
 import {CustomRequest} from "../types/custom-request";
@@ -38,6 +38,37 @@ export class UserController {
         }
     }
 
+    static async update(req: CustomRequest, res: Response, next: NextFunction): Promise<void> {
+        try {
+            const request = req.body as UpdateUserRequest;
+            const userId = (req.session.user as UserSessionData)._id;
+            const file = req.file;
+
+            // Memanggil fungsi service
+            const user = await UserService.update(file, request, userId);
+            res.status(200).json(
+                toAPIResponse(200, "OK", user, "User successfully updated")
+            );
+
+        } catch (error) {
+            next(error);
+        }
+    }
+
+    static async getProfile(req: CustomRequest, res: Response, next: NextFunction): Promise<void> {
+        try {
+            const userId = (req.session.user as UserSessionData)._id;
+
+            const user = await UserService.getById(userId);
+            res.status(200).json(
+                toAPIResponse(200, "OK", user, "User found")
+            );
+
+        } catch (error) {
+            next(error);
+        }
+    }
+
     static async verifyAccount(req: CustomRequest, res: Response, next: NextFunction): Promise<void> {
         try {
             const userId = req.params.id;
@@ -59,6 +90,20 @@ export class UserController {
 
             res.status(200).json(
                 toAPIResponse(200, 'OK', complaints, `Complaints found: ${complaints.complaints.length}`)
+            );
+        } catch (e) {
+            next(e);
+        }
+    }
+
+    static async delete(req: CustomRequest, res: Response, next: NextFunction) {
+        try {
+            const userId = req.params.id;
+            const sessionData = req.session.user as UserSessionData;
+            const deletedUser = await UserService.delete(userId, sessionData);
+
+            res.status(200).json(
+                toAPIResponse(200, 'OK', deletedUser, 'User deleted successfully')
             );
         } catch (e) {
             next(e);
