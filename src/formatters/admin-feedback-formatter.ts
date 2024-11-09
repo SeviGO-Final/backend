@@ -17,7 +17,7 @@ type AdminFeedbackResponse = {
     title: string;
     description: string;
     date: string;
-    attachment: string
+    attachment?: string
     complaint?: string;
     created_at?: string;
     updated_at?: string;

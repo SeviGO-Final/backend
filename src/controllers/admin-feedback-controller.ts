@@ -10,12 +10,12 @@ export class AdminFeedbackController {
         try {
             const file = req.file;
             const complaintId = req.params.complaintId;
+            console.log('from controller: ', complaintId);
 
             const request = req.body as CreateAdminFeedback;
-            request.complaint = complaintId;
             const sessionData = req.session.user as UserSessionData;
 
-            const adminFeedback = await AdminFeedbackService.create(file, request, sessionData);
+            const adminFeedback = await AdminFeedbackService.create(file, request, complaintId, sessionData);
             res.status(201).json(
                 toAPIResponse(201, 'Created', adminFeedback, 'Admin feedback successfully created')
             );
@@ -30,7 +30,7 @@ export class AdminFeedbackController {
             const sessionData = req.session.user as UserSessionData;
 
             const adminFeedback = await AdminFeedbackService.processingComplaint(complaintId, sessionData);
-            res.status(201).json(
+            res.status(200).json(
                 toAPIResponse(200, 'OK', adminFeedback, 'Complaint is in process')
             );
         } catch (e) {
@@ -42,9 +42,11 @@ export class AdminFeedbackController {
         try {
             const complaintId = req.params.complaintId;
             const sessionData = req.session.user as UserSessionData;
+            const request = req.body as CreateAdminFeedback;
 
-            const adminFeedback = await AdminFeedbackService.rejectComplaint(complaintId, sessionData);
-            res.status(201).json(
+
+            const adminFeedback = await AdminFeedbackService.rejectComplaint(request, complaintId, sessionData);
+            res.status(200).json(
                 toAPIResponse(200, 'OK', adminFeedback, 'Complaint is rejected')
             );
         } catch (e) {

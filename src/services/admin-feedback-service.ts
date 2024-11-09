@@ -16,9 +16,8 @@ import {AdminFeedback} from "../models/AdminFeedback";
 import {TrackingStatus} from "../models/TrackingStatus";
 
 export class AdminFeedbackService {
-    static async create(file: Express.Multer.File | undefined, request: CreateAdminFeedback, sessionData: UserSessionData) {
+    static async create(file: Express.Multer.File | undefined, request: CreateAdminFeedback, complaintId: string, sessionData: UserSessionData) {
         const validRequest = Validation.validate(AdminFeedbackValidation.CREATE, request);
-        const complaintId = validRequest.complaint!;
         const currentStatus = 'Selesai diproses';
 
         ServiceUtils.onlyAdminCan(sessionData, "You're not an admin");
@@ -50,6 +49,7 @@ export class AdminFeedbackService {
             fs.writeFileSync(filePath, file!.buffer);
 
             validRequest.attachment = `/uploads/feedback/${path.basename(filePath)}`;
+            validRequest.complaint = complaintId;
             const adminFeedback = await new AdminFeedback(validRequest).save();
 
             // set complaint current_status is done!
@@ -97,7 +97,8 @@ export class AdminFeedbackService {
         return toComplaintResponse(complaint)
     }
 
-    static async rejectComplaint(complaintId: string, sessionData: UserSessionData) {
+    static async rejectComplaint(request: CreateAdminFeedback, complaintId: string, sessionData: UserSessionData) {
+        const validRequest = Validation.validate(AdminFeedbackValidation.CREATE, request);
         const currentStatus = 'Laporan ditolak';
 
         ServiceUtils.onlyAdminCan(sessionData, "You're not an admin");
@@ -112,6 +113,9 @@ export class AdminFeedbackService {
         complaint.current_status = currentStatus;
         await complaint.save();
 
+        validRequest.complaint = complaintId;
+        const adminFeedback = await new AdminFeedback(validRequest).save();
+
         // save to tracking status
         await new TrackingStatus({
             status: currentStatus,
@@ -119,6 +123,6 @@ export class AdminFeedbackService {
             admin: sessionData._id
         }).save();
 
-        return toComplaintResponse(complaint)
+        return toAdminFeedbackResponse(adminFeedback);
     }
 }
