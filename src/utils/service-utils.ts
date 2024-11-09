@@ -3,6 +3,7 @@ import {CustomErrors} from "../types/custom-errors";
 import {Complaint} from "../models/Complaint";
 import slugify from "slugify";
 import {UserSessionData} from "../formatters/user-formatter";
+import {TrackingStatus} from "../models/TrackingStatus";
 
 export class ServiceUtils {
     static MAX_SIZE = 2 * 1024 * 1024; // 2 MB
@@ -19,6 +20,14 @@ export class ServiceUtils {
         }
 
         return complaint;
+    }
+
+    static async isExistingFeedback(complaintId: string, currentStatus: string, message: string) {
+        const trackingStatus = await TrackingStatus.findOne({ complaint: complaintId, status: currentStatus })
+            .select('_id');
+        if (trackingStatus) {
+            throw new CustomErrors(409, 'Conflict', message);
+        }
     }
 
     static onlyAdminCan(sessionData: UserSessionData, message: string) {

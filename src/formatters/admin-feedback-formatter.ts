@@ -1,9 +1,10 @@
 import {IAdminFeedback} from "../models/AdminFeedback";
 
 export type CreateAdminFeedback = {
-    content: string;
+    title: string;
+    description: string;
     date: string;
-    complaint: string;
+    complaint?: string;
     attachment?: string;
 }
 
@@ -13,7 +14,8 @@ export type ProcessOrRejectComplaint = {
 
 type AdminFeedbackResponse = {
     _id: string
-    content: string;
+    title: string;
+    description: string;
     date: string;
     attachment: string
     complaint?: string;
@@ -24,7 +26,8 @@ type AdminFeedbackResponse = {
 export function toAdminFeedbackResponse(adminFeedback: IAdminFeedback): AdminFeedbackResponse  {
     return {
         _id: adminFeedback._id.toString(),
-        content: adminFeedback.content,
+        title: adminFeedback.title,
+        description: adminFeedback.description,
         date: adminFeedback.date.toLocaleString(),
         attachment: adminFeedback.attachment,
         complaint: adminFeedback.complaint.toString(),

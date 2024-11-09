@@ -18,11 +18,15 @@ import {TrackingStatus} from "../models/TrackingStatus";
 export class AdminFeedbackService {
     static async create(file: Express.Multer.File | undefined, request: CreateAdminFeedback, sessionData: UserSessionData) {
         const validRequest = Validation.validate(AdminFeedbackValidation.CREATE, request);
-        const complaintId = validRequest.complaint;
+        const complaintId = validRequest.complaint!;
+        const currentStatus = 'Selesai diproses';
 
         ServiceUtils.onlyAdminCan(sessionData, "You're not an admin");
         ServiceUtils.isValidObjectId(complaintId);
         const complaint = await ServiceUtils.isExistsComplaint(complaintId);
+
+        // check existing tracking status to avoid idempotent request
+        await ServiceUtils.isExistingFeedback(complaintId, currentStatus, 'Complaint has been approved before');
 
         // if no file
         if (!file) {
@@ -49,7 +53,6 @@ export class AdminFeedbackService {
             const adminFeedback = await new AdminFeedback(validRequest).save();
 
             // set complaint current_status is done!
-            const currentStatus = 'Selesai diproses';
             complaint.current_status = currentStatus;
             await complaint.save();
 
@@ -69,17 +72,18 @@ export class AdminFeedbackService {
         }
     }
 
-    static async processingComplaint(request: ProcessOrRejectComplaint, sessionData: UserSessionData) {
-        const validRequest = Validation.validate(AdminFeedbackValidation.PROCESSING_OR_REJECT, request);
-        const complaintId = validRequest.complaint;
+    static async processingComplaint(complaintId: string, sessionData: UserSessionData) {
+        const currentStatus = 'Sedang diproses'
 
         ServiceUtils.onlyAdminCan(sessionData, "You're not an admin");
         ServiceUtils.isValidObjectId(complaintId);
 
         const complaint = await ServiceUtils.isExistsComplaint(complaintId);
 
+        // check existing tracking status to avoid idempotent request
+        await ServiceUtils.isExistingFeedback(complaintId, currentStatus, 'Complaint has been processed before');
+
         // set complain current_status
-        const currentStatus = 'Sedang diproses'
         complaint.current_status = currentStatus;
         await complaint.save();
 
@@ -93,17 +97,18 @@ export class AdminFeedbackService {
         return toComplaintResponse(complaint)
     }
 
-    static async rejectComplaint(request: ProcessOrRejectComplaint, sessionData: UserSessionData) {
-        const validRequest = Validation.validate(AdminFeedbackValidation.PROCESSING_OR_REJECT, request);
-        const complaintId = validRequest.complaint;
+    static async rejectComplaint(complaintId: string, sessionData: UserSessionData) {
+        const currentStatus = 'Laporan ditolak';
 
         ServiceUtils.onlyAdminCan(sessionData, "You're not an admin");
         ServiceUtils.isValidObjectId(complaintId);
 
         const complaint = await ServiceUtils.isExistsComplaint(complaintId);
 
+        // check existing tracking status to avoid idempotent request
+        await ServiceUtils.isExistingFeedback(complaintId, currentStatus, 'Complaint has been rejected before');
+
         // set complain current_status
-        const currentStatus = 'Laporan ditolak';
         complaint.current_status = currentStatus;
         await complaint.save();
 

@@ -14,6 +14,7 @@ import session from "express-session";
 import {getEnv} from "./utils/getenv";
 import {complaintRoutes} from "./routes/complaint-routes";
 import {adminFeedbackRoutes} from "./routes/admin-feedback-routes";
+import path from "path";
 dotenv.config();
 
 export const app: Application = express();
@@ -30,6 +31,7 @@ app.use(session({
 app.use(cors(corsOptions));
 app.options('*', cors(corsOptions));
 app.use(bodyParser.json());
+app.use('/uploads', express.static(path.join(__dirname, '../uploads')));
 app.use(morgan('dev'));
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 

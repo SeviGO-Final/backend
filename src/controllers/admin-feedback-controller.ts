@@ -1,7 +1,7 @@
 import { Response,  NextFunction } from "express";
 import {CustomRequest} from "../types/custom-request";
 import {AdminFeedbackService} from "../services/admin-feedback-service";
-import {CreateAdminFeedback, ProcessOrRejectComplaint} from "../formatters/admin-feedback-formatter";
+import {CreateAdminFeedback} from "../formatters/admin-feedback-formatter";
 import {UserSessionData} from "../formatters/user-formatter";
 import {toAPIResponse} from "../formatters/api-response";
 
@@ -9,7 +9,10 @@ export class AdminFeedbackController {
     static async create(req: CustomRequest, res: Response, next: NextFunction) {
         try {
             const file = req.file;
+            const complaintId = req.params.complaintId;
+
             const request = req.body as CreateAdminFeedback;
+            request.complaint = complaintId;
             const sessionData = req.session.user as UserSessionData;
 
             const adminFeedback = await AdminFeedbackService.create(file, request, sessionData);
@@ -23,10 +26,10 @@ export class AdminFeedbackController {
 
     static async processingComplaint(req: CustomRequest, res: Response, next: NextFunction) {
         try {
-            const request = req.body as ProcessOrRejectComplaint;
+            const complaintId = req.params.complaintId;
             const sessionData = req.session.user as UserSessionData;
 
-            const adminFeedback = await AdminFeedbackService.processingComplaint(request, sessionData);
+            const adminFeedback = await AdminFeedbackService.processingComplaint(complaintId, sessionData);
             res.status(201).json(
                 toAPIResponse(200, 'OK', adminFeedback, 'Complaint is in process')
             );
@@ -37,10 +40,10 @@ export class AdminFeedbackController {
 
     static async rejectComplaint(req: CustomRequest, res: Response, next: NextFunction) {
         try {
-            const request = req.body as ProcessOrRejectComplaint;
+            const complaintId = req.params.complaintId;
             const sessionData = req.session.user as UserSessionData;
 
-            const adminFeedback = await AdminFeedbackService.rejectComplaint(request, sessionData);
+            const adminFeedback = await AdminFeedbackService.rejectComplaint(complaintId, sessionData);
             res.status(201).json(
                 toAPIResponse(200, 'OK', adminFeedback, 'Complaint is rejected')
             );

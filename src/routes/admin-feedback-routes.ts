@@ -7,6 +7,6 @@ export const adminFeedbackRoutes = express.Router();
 const upload = multer({ storage: multer.memoryStorage() });
 
 adminFeedbackRoutes.use(authMiddleware);
-adminFeedbackRoutes.post('/', upload.single('attachment'), AdminFeedbackController.create);
-adminFeedbackRoutes.post('/processing', AdminFeedbackController.processingComplaint);
-adminFeedbackRoutes.post('/reject', AdminFeedbackController.rejectComplaint);
+adminFeedbackRoutes.post('/:complaintId', upload.single('attachment'), AdminFeedbackController.create);
+adminFeedbackRoutes.post('/:complaintId/process', AdminFeedbackController.processingComplaint);
+adminFeedbackRoutes.post('/:complaintId/reject', AdminFeedbackController.rejectComplaint);
