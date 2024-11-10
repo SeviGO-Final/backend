@@ -11,22 +11,20 @@ const swaggerDefinition: OAS3Definition = {
   },
   servers: [{ url: "http://localhost:3000/api" }],
   components: {
+    securitySchemes: {
+      bearerAuth: {
+        type: "http",
+        scheme: "bearer",
+        bearerFormat: "JWT",
+      },
+    },
     schemas: {
       "422ResponseError": {
         type: "object",
         properties: {
-          code: {
-            type: "number",
-            example: 422,
-          },
-          status: {
-            type: "string",
-            example: "Unprocessable Entity",
-          },
-          errors: {
-            type: "string",
-            example: "Password does not meet the required criteria.",
-          },
+          code: { type: "number", example: 422 },
+          status: { type: "string", example: "Unprocessable Entity" },
+          errors: { type: "string", example: "Password does not meet the required criteria." },
         },
       },
       User: {
@@ -42,7 +40,6 @@ const swaggerDefinition: OAS3Definition = {
   },
   paths: {
     ...userPaths,
-    // ...categoryPaths
   },
 };
 
