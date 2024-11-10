@@ -140,6 +140,85 @@ const userPaths = {
     },
   },
   "/users/profile": {
+    get: {
+      tags: ["User Endpoints"],
+      summary: "Get user profile",
+      description:
+        "This endpoint retrieves the profile information of the authenticated user.",
+        security: [
+          {
+            bearerAuth: [],
+          },
+        ],
+      responses: {
+        "200": {
+          description: "Success response - User found",
+          content: {
+            "application/json": {
+              schema: {
+                type: "object",
+                properties: {
+                  code: {
+                    type: "number",
+                    example: 200,
+                  },
+                  status: {
+                    type: "string",
+                    example: "OK",
+                  },
+                  data: {
+                    type: "object",
+                    properties: {
+                      id: {
+                        type: "string",
+                        example: "64b5c9c13c2a2f1e04c3c54a",
+                      },
+                      nik: {
+                        type: "string",
+                        example: "3327123443215678",
+                      },
+                      name: {
+                        type: "string",
+                        example: "Tony Stark",
+                      },
+                      email: {
+                        type: "string",
+                        example: "stark@test.com",
+                      },
+                      avatar: {
+                        type: "string",
+                        example:
+                          "uploads/avatars/64b5c9c13c2a2f1e04c3c54a-avatar.jpg",
+                      },
+                    },
+                  },
+                },
+              },
+            },
+          },
+        },
+        "404": {
+          description: "Error response - User not found",
+          content: {
+            "application/json": {
+              schema: {
+                $ref: "#/components/schemas/422ResponseError",
+              },
+            },
+          },
+        },
+        "401": {
+          description: "Unauthorized - Missing or invalid authentication",
+          content: {
+            "application/json": {
+              schema: {
+                $ref: "#/components/schemas/422ResponseError",
+              },
+            },
+          },
+        },
+      },
+    },
     put: {
       tags: ["User Endpoints"],
       summary: "Update user profile",
@@ -298,88 +377,7 @@ const userPaths = {
       },
     },
   },
-  "/profile": {
-    get: {
-      tags: ["User Endpoints"],
-      summary: "Get user profile",
-      description:
-        "This endpoint retrieves the profile information of the authenticated user.",
-      security: [
-        {
-          BearerAuth: [],
-        },
-      ],
-      responses: {
-        "200": {
-          description: "Success response - User found",
-          content: {
-            "application/json": {
-              schema: {
-                type: "object",
-                properties: {
-                  code: {
-                    type: "number",
-                    example: 200,
-                  },
-                  status: {
-                    type: "string",
-                    example: "OK",
-                  },
-                  data: {
-                    type: "object",
-                    properties: {
-                      id: {
-                        type: "string",
-                        example: "64b5c9c13c2a2f1e04c3c54a",
-                      },
-                      nik: {
-                        type: "string",
-                        example: "3327123443215678",
-                      },
-                      name: {
-                        type: "string",
-                        example: "Tony Stark",
-                      },
-                      email: {
-                        type: "string",
-                        example: "stark@test.com",
-                      },
-                      avatar: {
-                        type: "string",
-                        example:
-                          "uploads/avatars/64b5c9c13c2a2f1e04c3c54a-avatar.jpg",
-                      },
-                    },
-                  },
-                },
-              },
-            },
-          },
-        },
-        "404": {
-          description: "Error response - User not found",
-          content: {
-            "application/json": {
-              schema: {
-                $ref: "#/components/schemas/422ResponseError",
-              },
-            },
-          },
-        },
-        "401": {
-          description: "Unauthorized - Missing or invalid authentication",
-          content: {
-            "application/json": {
-              schema: {
-                $ref: "#/components/schemas/422ResponseError",
-              },
-            },
-          },
-        },
-      },
-    },
-  },
-  "/complaints": {
+  "/users/complaints": {
     get: {
       tags: ["User Endpoints"],
       summary: "Get user complaints",
@@ -387,7 +385,7 @@ const userPaths = {
         "This endpoint retrieves all complaints associated with the authenticated user.",
       security: [
         {
-          BearerAuth: [],
+          bearerAuth: [],
         },
       ],
       responses: {
