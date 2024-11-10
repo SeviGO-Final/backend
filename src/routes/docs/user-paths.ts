@@ -98,6 +98,11 @@ const userPaths = {
       tags: ["User Endpoints"],
       summary: "Verify a user account",
       description: "Admin-only endpoint to verify user accounts.",
+      security: [
+        {
+          BearerAuth: [],
+        },
+      ],
       parameters: [
         {
           name: "id",
