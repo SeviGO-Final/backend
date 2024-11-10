@@ -1,7 +1,6 @@
 import swaggerJsDoc, { OAS3Definition, OAS3Options } from "swagger-jsdoc";
 import userPaths from "./user-paths";
-// import categoryPaths from './category-paths';
-
+import categoryPaths from './category-paths'
 const swaggerDefinition: OAS3Definition = {
   openapi: "3.0.3",
   info: {
@@ -40,6 +39,7 @@ const swaggerDefinition: OAS3Definition = {
   },
   paths: {
     ...userPaths,
+    ...categoryPaths,
   },
 };
 
