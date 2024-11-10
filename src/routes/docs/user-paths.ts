@@ -100,7 +100,7 @@ const userPaths = {
       description: "Admin-only endpoint to verify user accounts.",
       security: [
         {
-          BearerAuth: [],
+          bearerAuth: [],
         },
       ],
       parameters: [
@@ -145,11 +145,11 @@ const userPaths = {
       summary: "Get user profile",
       description:
         "This endpoint retrieves the profile information of the authenticated user.",
-        security: [
-          {
-            bearerAuth: [],
-          },
-        ],
+      security: [
+        {
+          bearerAuth: [],
+        },
+      ],
       responses: {
         "200": {
           description: "Success response - User found",
@@ -226,7 +226,7 @@ const userPaths = {
         "This endpoint is used for updating user profile information, including avatar upload.",
       security: [
         {
-          BearerAuth: [],
+          bearerAuth: [],
         },
       ],
       requestBody: {
