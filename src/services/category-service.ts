@@ -1,8 +1,10 @@
 import { Category, ICategory } from "../models/Category";
-
+import {UserSessionData} from "../formatters/user-formatter";
+import {ServiceUtils} from "../utils/service-utils";
 export class CategoryService {
 
-  async createCategory(name: string): Promise<ICategory> {
+  async createCategory(name: string, sessionData: UserSessionData): Promise<ICategory> {
+    ServiceUtils.onlyAdminCan(sessionData, 'This action is restricted to administrators only.');
     const category = new Category({ name });
     return await category.save();
   }
@@ -15,11 +17,13 @@ export class CategoryService {
     return await Category.findById(id);
   }
 
-  async updateCategory(id: string, name: string): Promise<ICategory | null> {
+  async updateCategory(id: string, name: string, sessionData: UserSessionData): Promise<ICategory | null> {
+    ServiceUtils.onlyAdminCan(sessionData, 'This action is restricted to administrators only.');
     return await Category.findByIdAndUpdate(id, { name }, { new: true });
   }
 
-  async deleteCategory(id: string): Promise<ICategory | null> {
+  async deleteCategory(id: string, sessionData: UserSessionData): Promise<ICategory | null> {
+    ServiceUtils.onlyAdminCan(sessionData, 'This action is restricted to administrators only.');
     return await Category.findByIdAndDelete(id);
   }
 }
