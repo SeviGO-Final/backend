@@ -200,6 +200,86 @@ const complaintPaths = {
       },
     },
   },
+  "/complaints/{id}": {
+    get: {
+        tags: ["Complaint Endpoints"],
+        summary: "Get complaint by ID",
+        description: "Retrieve detailed information of a specific complaint by ID.",
+        security: [
+            {
+                bearerAuth: [],
+            },
+        ],
+        parameters: [
+            {
+                name: "id",
+                in: "path",
+                required: true,
+                schema: {
+                    type: "string",
+                },
+                description: "ID of the complaint to retrieve",
+            },
+        ],
+        responses: {
+            "200": {
+                description: "Complaint found",
+                content: {
+                    "application/json": {
+                        schema: {
+                            type: "object",
+                            properties: {
+                                code: { type: "number", example: 200 },
+                                status: { type: "string", example: "OK" },
+                                data: {
+                                    type: "object",
+                                    properties: {
+                                        id: { type: "string", example: "64d5c9c13c2a2f1e04c3c55b" },
+                                        title: { type: "string", example: "Pelayanan Publik" },
+                                        content: { type: "string", example: "Pelayanan Publik" },
+                                        date_event: { type: "string", format: "date", example: "2024-11-05" },
+                                        description: { type: "string", example: "The service was delayed for more than an hour." },
+                                        location: { type: "string", example: "RT 04" },
+                                        status: { type: "string", example: "Pending" },
+                                        updated_at: { type: "string", format: "date-time", example: "2024-11-05T10:00:00Z" },
+                                        created_at: { type: "string", format: "date-time", example: "2024-11-05T10:00:00Z" },
+                                        tracking_status: {
+                                            type: "array",
+                                            items: {
+                                                type: "object",
+                                                properties: {
+                                                    status: { type: "string", example: "In Progress" },
+                                                    updated_at: { type: "string", format: "date-time", example: "2024-11-06T14:30:00Z" }
+                                                }
+                                            }
+                                        },
+                                    }
+                                },
+                            },
+                        },
+                    },
+                },
+            },
+            "404": {
+                description: "Error response - Complaint not found",
+                content: {
+                    "application/json": {
+                        schema: { $ref: "#/components/schemas/422ResponseError" },
+                    },
+                },
+            },
+            "401": {
+                description: "Unauthorized - Missing or invalid authentication",
+                content: {
+                    "application/json": {
+                        schema: { $ref: "#/components/schemas/422ResponseError" },
+                    },
+                },
+            },
+        },
+    },
+},
+
 };
 
 export default complaintPaths;
