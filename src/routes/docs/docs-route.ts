@@ -37,6 +37,11 @@ const swaggerDefinition: OAS3Definition = {
         },
       },
     },
+    security: [
+      {
+        bearerAuth: [],
+      },
+    ]
   },
   paths: {
     ...userPaths,
