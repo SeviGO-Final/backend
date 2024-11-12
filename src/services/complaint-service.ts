@@ -79,6 +79,21 @@ export class ComplaintService {
         return response;
     }
 
+    static async getAll(page: number, limit: number) {
+        const skip = (page - 1) * limit;
+        console.log('skip: ', skip);    
+        const complaints = await Complaint.find({})
+            .skip(skip)
+            .limit(limit);
+
+        const totalComplaints = await Complaint.countDocuments();
+
+        return {
+            total: totalComplaints,
+            complaints: complaints.map(toComplaintResponse)
+        }
+    }
+
     static async update(complaintId: string, file: Express.Multer.File | undefined, request: CreateOrUpdateComplaint, userId: string) {
         const oldComplaint = await ServiceUtils.isExistsComplaint(complaintId);
         if (oldComplaint.user.toString() !== userId) {

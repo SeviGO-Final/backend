@@ -69,6 +69,13 @@ export class UserService {
         return response;
     }
 
+    static async logout(sessionData: UserSessionData) {
+        // no need to validate the request body
+        return {
+            message: "Logout success"
+        };
+    }
+
     static async update(file: Express.Multer.File | undefined, request: UpdateUserRequest, userId: string) {
         ServiceUtils.isValidObjectId(userId);
 
@@ -166,6 +173,21 @@ export class UserService {
         }
 
         return response;
+    }
+
+    static async getAllUsers(sessionData: UserSessionData, page: number, limit: number) {
+        const skip = (page - 1) * limit;
+
+        ServiceUtils.onlyAdminCan(sessionData, 'Only admin can access all users');
+
+        const usersPerPage = await User.find({}).skip(skip).limit(limit);
+
+        const totalUsers = await User.countDocuments({});
+
+        return {
+            total: totalUsers,
+            users: usersPerPage.map(user => toUserResponse(user))
+        };
     }
 
     static async verifyUser(userId: string, sessionData: UserSessionData) {

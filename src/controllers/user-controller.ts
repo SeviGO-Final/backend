@@ -3,6 +3,7 @@ import {LoginUserRequest, RegisterUserRequest, UpdateUserRequest, UserSessionDat
 import {UserService} from "../services/user-service";
 import {toAPIResponse} from "../formatters/api-response";
 import {CustomRequest} from "../types/custom-request";
+import session from 'express-session';
 
 export class UserController {
     static async register(req: Request, res: Response, next: NextFunction): Promise<void> {
@@ -38,6 +39,20 @@ export class UserController {
         }
     }
 
+    static async logout(req: CustomRequest, res: Response, next: NextFunction): Promise<void> {
+        try {
+            req.session.destroy((err) => {
+                if (err) next(err);
+            });
+        
+            res.status(200).json(
+                toAPIResponse(200, "OK", { is_logged_out: true }, "You're logged out")
+            );
+        } catch (err) {
+            next(err);
+        }
+    }
+
     static async update(req: CustomRequest, res: Response, next: NextFunction): Promise<void> {
         try {
             const request = req.body as UpdateUserRequest;
@@ -64,6 +79,30 @@ export class UserController {
                 toAPIResponse(200, "OK", user, "User found")
             );
 
+        } catch (error) {
+            next(error);
+        }
+    }
+    
+    static async getAll(req: CustomRequest, res: Response, next: NextFunction): Promise<void> {
+        try {
+            const page = parseInt(req.query.page as string || '0', 10);
+            const limit = parseInt(req.query.limit as string || '0', 10);
+
+            const sessionData = (req.session.user as UserSessionData);
+            const users = await UserService.getAllUsers(sessionData, page, limit);
+
+            res.status(200).json({
+                code: 200,
+                status: 'OK',
+                message: 'Users retrieved',
+                data: users.users,
+                meta: {
+                    total: users.total,
+                    page,
+                    entries: limit,
+                }
+            });            
         } catch (error) {
             next(error);
         }

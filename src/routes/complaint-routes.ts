@@ -7,6 +7,7 @@ export const complaintRoutes = express.Router();
 const upload = multer({ storage: multer.memoryStorage() });
 
 complaintRoutes.get('/:id', ComplaintController.getById);
+complaintRoutes.get('/', ComplaintController.getAll);
 
 complaintRoutes.use(authMiddleware);
 complaintRoutes.post('/', upload.single('evidence'), ComplaintController.create);

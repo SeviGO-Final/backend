@@ -35,6 +35,28 @@ export class ComplaintController {
         }
     }
 
+    static async getAll(req: CustomRequest, res: Response, next: NextFunction) {
+        try {
+            const page = parseInt(req.query.page as string || '0', 10);
+            const limit = parseInt(req.query.limit as string || '0', 10);
+
+            const complaints = await ComplaintService.getAll(page, limit);
+            res.status(200).json({
+                code: 200,
+                status: 'OK',
+                message: 'Complaints retrieved',
+                data: complaints.complaints,
+                meta: {
+                    total: complaints.total,
+                    page,
+                    entries: limit,
+                }
+            });                                
+        } catch (e) {
+            next(e);
+        }
+    }
+
     static async update(req: CustomRequest, res: Response, next: NextFunction) {
         try {
             const userId = (req.session.user as UserSessionData)._id;

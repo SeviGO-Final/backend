@@ -10,8 +10,6 @@ export class StatisticsService {
             const categoriesName = await Category.find({}).select(['_id', 'name']);
             const categoryResponses = toCategoryResponses(categoriesName);
             
-            console.log(categoryResponses);
-
             // 1. Total jumlah semua complaint
             const totalComplaints = await Complaint.countDocuments();
 
