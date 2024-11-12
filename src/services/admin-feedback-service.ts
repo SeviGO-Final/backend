@@ -3,7 +3,6 @@ import {ServiceUtils} from "../utils/service-utils";
 import {toComplaintResponse} from "../formatters/complaint-formatter";
 import {
     CreateAdminFeedback,
-    ProcessOrRejectComplaint,
     toAdminFeedbackResponse
 } from "../formatters/admin-feedback-formatter";
 import {UserSessionData} from "../formatters/user-formatter";
@@ -18,7 +17,7 @@ import {TrackingStatus} from "../models/TrackingStatus";
 export class AdminFeedbackService {
     static async create(file: Express.Multer.File | undefined, request: CreateAdminFeedback, complaintId: string, sessionData: UserSessionData) {
         const validRequest = Validation.validate(AdminFeedbackValidation.CREATE, request);
-        const currentStatus = 'Selesai diproses';
+        const currentStatus = 'accepted';
 
         ServiceUtils.onlyAdminCan(sessionData, "You're not an admin");
         ServiceUtils.isValidObjectId(complaintId);
@@ -73,7 +72,7 @@ export class AdminFeedbackService {
     }
 
     static async processingComplaint(complaintId: string, sessionData: UserSessionData) {
-        const currentStatus = 'Sedang diproses'
+        const currentStatus = 'processing'
 
         ServiceUtils.onlyAdminCan(sessionData, "You're not an admin");
         ServiceUtils.isValidObjectId(complaintId);
@@ -99,7 +98,7 @@ export class AdminFeedbackService {
 
     static async rejectComplaint(request: CreateAdminFeedback, complaintId: string, sessionData: UserSessionData) {
         const validRequest = Validation.validate(AdminFeedbackValidation.CREATE, request);
-        const currentStatus = 'Laporan ditolak';
+        const currentStatus = 'rejected';
 
         ServiceUtils.onlyAdminCan(sessionData, "You're not an admin");
         ServiceUtils.isValidObjectId(complaintId);

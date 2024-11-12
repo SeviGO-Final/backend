@@ -14,6 +14,7 @@ import session from "express-session";
 import {getEnv} from "./utils/getenv";
 import {complaintRoutes} from "./routes/complaint-routes";
 import {adminFeedbackRoutes} from "./routes/admin-feedback-routes";
+import { staticticsRoutes } from './routes/statictics-routes';
 import path from "path";
 dotenv.config();
 
@@ -44,6 +45,7 @@ app.use('/api/users', userRoutes);
 app.use('/api/categories', categoryRoutes);
 app.use('/api/complaints', complaintRoutes);
 app.use('/api/admin-feedback', adminFeedbackRoutes);
+app.use('/api/statistics', staticticsRoutes);
 
 // errors handling middleware
 app.use(ErrorMiddleware);

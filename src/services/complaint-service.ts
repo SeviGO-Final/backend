@@ -46,7 +46,7 @@ export class ComplaintService {
 
             // Save file url
             saveRequest.evidence = `uploads/complaints/${path.basename(filePath)}`
-            saveRequest.current_status = 'Laporan diajukan';
+            saveRequest.current_status = 'submitted';
             saveRequest.user = userId;
 
             // save to complaint
