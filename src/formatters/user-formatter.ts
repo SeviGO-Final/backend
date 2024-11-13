@@ -46,6 +46,7 @@ export function toUserResponse(user: IUser): UserResponse {
         nik: user.nik,
         name: user.name,
         email: user.email,
+        address: user.address ?? undefined,
         role: user.role,
         is_verified: user.is_verified,
     }
