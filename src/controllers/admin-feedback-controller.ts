@@ -43,6 +43,7 @@ export class AdminFeedbackController {
             const complaintId = req.params.complaintId;
             const sessionData = req.session.user as UserSessionData;
             const request = req.body as CreateAdminFeedback;
+            console.log(request)
 
 
             const adminFeedback = await AdminFeedbackService.rejectComplaint(request, complaintId, sessionData);
