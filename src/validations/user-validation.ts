@@ -49,7 +49,7 @@ export class UserValidation {
             .max(255, { message: "Password tidak boleh lebih dari 255 karakter." })
             .optional(),
         address: z.string()
-            .min(3, { message: "Password harus terdiri dari minimal 3 karakter." })
+            .min(3, { message: "Address harus terdiri dari minimal 3 karakter." })
             .max(255, { message: "Password tidak boleh lebih dari 255 karakter." })
             .optional()
     })

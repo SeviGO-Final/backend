@@ -10,6 +10,8 @@ import {ComplaintValidation} from "../validations/complaint-validation";
 import {CustomErrors} from "../types/custom-errors";
 import {TrackingStatus} from "../models/TrackingStatus";
 import {ServiceUtils} from "../utils/service-utils";
+import { toComplaintResponses } from '../formatters/complaint-formatter';
+import { Category } from "../models/Category";
 
 export class ComplaintService {
     static async create(file: Express.Multer.File | undefined, request: CreateOrUpdateComplaint, userId: string) {
@@ -69,11 +71,15 @@ export class ComplaintService {
 
     static async getById(complaintId: string) {
         const complaint = await ServiceUtils.isExistsComplaint(complaintId);
+
+        const category = await Category.findById(complaint.category).select('_id name');
+
         const trackingStatus = await TrackingStatus.find({
             complaint: complaintId
         }).sort({ updatedAt: -1 }); // sort by latest update
 
         const response = toComplaintResponse(complaint);
+        response.category = category;
         response.tracking_status = toTrackingStatusResponses(trackingStatus);
 
         return response;
@@ -82,15 +88,16 @@ export class ComplaintService {
     static async getAll(page: number, limit: number) {
         const skip = (page - 1) * limit;
         console.log('skip: ', skip);    
-        const complaints = await Complaint.find({})
+        const complaints = await Complaint.find().populate('category', '_id name').sort({ updated_at: -1 })
             .skip(skip)
             .limit(limit);
 
-        const totalComplaints = await Complaint.countDocuments();
+        console.log('complaints: ', complaints.map(c => c.category));
 
+        const totalComplaints = await Complaint.countDocuments();        
         return {
             total: totalComplaints,
-            complaints: complaints.map(toComplaintResponse)
+            complaints: complaints.map(toComplaintResponse),
         }
     }
 

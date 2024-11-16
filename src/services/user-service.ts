@@ -65,15 +65,10 @@ export class UserService {
 
         const response = toUserResponse(user);
         response.token = token;
-
+        if(user.address) {
+            response.address = user.address;
+        }
         return response;
-    }
-
-    static async logout(sessionData: UserSessionData) {
-        // no need to validate the request body
-        return {
-            message: "Logout success"
-        };
     }
 
     static async update(file: Express.Multer.File | undefined, request: UpdateUserRequest, userId: string) {
@@ -147,10 +142,7 @@ export class UserService {
             const response = toUserResponse(findById);
             if(findById.avatar) {
                 response.avatar = findById.avatar;
-            }
-            if(findById.address) {
-                response.address = findById.address;
-            }
+            }            
 
             return response;
         } catch (e) {
@@ -167,7 +159,7 @@ export class UserService {
             throw new CustomErrors(404, 'Not Found', 'User not found');
         }
 
-        const response = toUserResponse(findById);
+        const response = toUserResponse(findById);        
         if (findById.avatar) {
             response.avatar = findById.avatar;
         }

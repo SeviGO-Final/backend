@@ -29,8 +29,8 @@ export type UserResponse = {
     email: string,
     role: string;
     is_verified: boolean;
-    avatar?: string;
     address?: string;
+    avatar?: string;
     token?: string;
     complaints?: any;
 }
