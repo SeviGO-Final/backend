@@ -10,7 +10,6 @@ import {ComplaintValidation} from "../validations/complaint-validation";
 import {CustomErrors} from "../types/custom-errors";
 import {TrackingStatus} from "../models/TrackingStatus";
 import {ServiceUtils} from "../utils/service-utils";
-import { toComplaintResponses } from '../formatters/complaint-formatter';
 import { Category } from "../models/Category";
 
 export class ComplaintService {
@@ -87,12 +86,9 @@ export class ComplaintService {
 
     static async getAll(page: number, limit: number) {
         const skip = (page - 1) * limit;
-        console.log('skip: ', skip);    
         const complaints = await Complaint.find().populate('category', '_id name').sort({ updated_at: -1 })
             .skip(skip)
             .limit(limit);
-
-        console.log('complaints: ', complaints.map(c => c.category));
 
         const totalComplaints = await Complaint.countDocuments();        
         return {

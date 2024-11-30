@@ -6,6 +6,8 @@ import {AdminFeedbackController} from "../controllers/admin-feedback-controller"
 export const adminFeedbackRoutes = express.Router();
 const upload = multer({ storage: multer.memoryStorage() });
 
+adminFeedbackRoutes.get('/:id', AdminFeedbackController.getFeedback);
+
 adminFeedbackRoutes.use(authMiddleware);
 adminFeedbackRoutes.post('/:complaintId', upload.single('attachment'), AdminFeedbackController.create);
 adminFeedbackRoutes.post('/:complaintId/process', AdminFeedbackController.processingComplaint);
