@@ -163,4 +163,12 @@ export class AdminFeedbackService {
 
     return toAdminFeedbackResponse(adminFeedback);
   }
+  static async getFeedback(feedbackId: string) {
+    const feedback = await AdminFeedback.findById(feedbackId);
+    if(!feedback) {
+        throw new CustomErrors(404, 'Not Found', 'Admin feedback not found');
+    }
+    
+    return toAdminFeedbackResponse(feedback);
+}
 }
