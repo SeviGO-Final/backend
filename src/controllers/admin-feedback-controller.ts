@@ -10,7 +10,6 @@ export class AdminFeedbackController {
         try {
             const file = req.file;
             const complaintId = req.params.complaintId;
-            console.log('from controller: ', complaintId);
 
             const request = req.body as CreateAdminFeedback;
             const sessionData = req.session.user as UserSessionData;
@@ -49,6 +48,19 @@ export class AdminFeedbackController {
             const adminFeedback = await AdminFeedbackService.rejectComplaint(request, complaintId, sessionData);
             res.status(200).json(
                 toAPIResponse(200, 'OK', adminFeedback, 'Complaint is rejected')
+            );
+        } catch (e) {
+            next(e);
+        }
+    }
+
+    static async getFeedback(req: CustomRequest, res: Response, next: NextFunction) {
+        try {
+            const feedbackId = req.params.id;
+            
+            const adminFeedback = await AdminFeedbackService.getFeedback(feedbackId);
+            res.status(200).json(
+                toAPIResponse(200, 'OK', adminFeedback, 'Detail of admin feedback')
             );
         } catch (e) {
             next(e);

@@ -146,6 +146,98 @@ const adminFeedbackPaths = {
           },
         },
       },
+    },    
+  },
+  "/admin-feedback/{id}": {
+    get: {
+      tags: ["Admin Feedback"],
+      summary: "Get detail of admin feedback",
+      description:
+        "This endpoint allows to get admin feedback detail.",      
+      operationId: "GetAdminFeedback",
+      parameters: [
+        {
+          name: "id",
+          in: "path",
+          required: true,
+          description:
+            "The ID of the admin feedback is being provided.",
+          schema: {
+            type: "string",
+            example: "60d9f87c776f5f5b45c3c8f1", // example of feedbackId
+          },
+        },
+      ],
+      responses: {
+        "200": {
+          description: "Success get detail of admin feedback",
+          content: {
+            "application/json": {
+              schema: {
+                type: "object",
+                properties: {
+                  code: { type: "number", example: 200 },
+                  status: { type: "string", example: "OK" },
+                  message: {
+                    type: "string",
+                    example: "Detail of admin feedback",
+                  },
+                  data: {
+                    type: "object",
+                    properties: {
+                      _id: {
+                        type: "string",
+                        example: "6733f25e6ecb37d0064c34e9",
+                      },
+                      title: {
+                        type: "string",
+                        example: "Laporan anda di terima",
+                      },
+                      description: {
+                        type: "string",
+                        example: "Laporan anda di terima tunggu proses lanjut",
+                      },
+                      date: { type: "string", example: "01/12/2022, 00.00.00" },
+                      attachment: {
+                        type: "string",
+                        example:
+                          "/uploads/feedback/1731457630450-laser-fiber.png",
+                      },
+                      complaint: {
+                        type: "string",
+                        example: "6733f02e6ecb37d0064c34e0",
+                      },
+                      created_at: {
+                        type: "string",
+                        example: "13/11/2024, 07.27.10",
+                      },
+                      updated_at: {
+                        type: "string",
+                        example: "13/11/2024, 07.27.10",
+                      },
+                    },
+                  },
+                },
+              },
+            },
+          },
+        },        
+        "404": {
+          description: "Not Found - Admin feedback does not exist",
+          content: {
+            "application/json": {
+              schema: {
+                type: "object",
+                properties: {
+                  code: { type: "number", example: 404 },
+                  status: { type: "string", example: "Not Found" },
+                  errors: { type: "string", example: "Admin feedback not found" },
+                },
+              },
+            },
+          },
+        },
+      },
     },
   },
   "/admin-feedback/{complaintId}/process": {

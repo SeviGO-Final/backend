@@ -11,13 +11,13 @@ import path from "path";
 import fs from "fs";
 import {Validation} from "../validations/schema";
 import {AdminFeedbackValidation} from "../validations/admin-feedback-validation";
-import {AdminFeedback} from "../models/AdminFeedback";
+import { AdminFeedback } from '../models/AdminFeedback';
 import {TrackingStatus} from "../models/TrackingStatus";
 
 export class AdminFeedbackService {
     static async create(file: Express.Multer.File | undefined, request: CreateAdminFeedback, complaintId: string, sessionData: UserSessionData) {
         const validRequest = Validation.validate(AdminFeedbackValidation.CREATE, request);
-        const currentStatus = 'accepted';
+        const currentStatus = 'finish';
 
         ServiceUtils.onlyAdminCan(sessionData, "You're not an admin");
         ServiceUtils.isValidObjectId(complaintId);
@@ -123,5 +123,14 @@ export class AdminFeedbackService {
         }).save();
 
         return toAdminFeedbackResponse(adminFeedback);
+    }
+    
+    static async getFeedback(feedbackId: string) {
+        const feedback = await AdminFeedback.findById(feedbackId);
+        if(!feedback) {
+            throw new CustomErrors(404, 'Not Found', 'Admin feedback not found');
+        }
+        
+        return toAdminFeedbackResponse(feedback);
     }
 }
