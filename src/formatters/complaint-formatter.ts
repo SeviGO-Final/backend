@@ -29,6 +29,7 @@ export type ComplaintResponse = {
     evidence: string;
     current_status: string;
     category: any;
+    feedback_id?: any;
     tracking_status?: TrackingStatusResponse[];
     is_deleted: boolean;
     created_at?: string,

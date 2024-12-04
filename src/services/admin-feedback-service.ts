@@ -67,7 +67,7 @@ export class AdminFeedbackService {
       // save file
       fs.writeFileSync(filePath, file!.buffer);
 
-      validRequest.attachment = `/uploads/feedback/${path.basename(filePath)}`;
+      validRequest.attachment = `uploads/feedback/${path.basename(filePath)}`;
       validRequest.complaint = complaintId;
       const adminFeedback = await new AdminFeedback(validRequest).save();
 
@@ -171,4 +171,15 @@ export class AdminFeedbackService {
     
     return toAdminFeedbackResponse(feedback);
 }
+
+  static async getAll(userSession: UserSessionData) {
+      ServiceUtils.onlyAdminCan(userSession, "Only admin can get all feedbacks");
+      const adminFeedbacks = await AdminFeedback.find({});
+
+      if (!adminFeedbacks) {
+        throw new CustomErrors(404, "Not Found", "No feedbacks found")
+      }
+
+      return adminFeedbacks.map((feedBack) => toAdminFeedbackResponse(feedBack));
+  }
 }

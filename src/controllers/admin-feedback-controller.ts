@@ -66,4 +66,16 @@ export class AdminFeedbackController {
             next(e);
         }
     }
+
+    static async getAll(req: CustomRequest, res: Response, next: NextFunction) {
+        try {
+            const userSession = req.session.user as UserSessionData;
+            const adminFeedbacks = await AdminFeedbackService.getAll(userSession);
+            res.status(200).json(
+                toAPIResponse(200, 'OK', adminFeedbacks, 'List all admin feedbacks')
+            )
+        } catch (e) {
+            next(e);
+        }
+    }
 }

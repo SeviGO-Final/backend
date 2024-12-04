@@ -11,6 +11,7 @@ import {CustomErrors} from "../types/custom-errors";
 import {TrackingStatus} from "../models/TrackingStatus";
 import {ServiceUtils} from "../utils/service-utils";
 import { Category } from "../models/Category";
+import {AdminFeedback} from "../models/AdminFeedback";
 
 export class ComplaintService {
     static async create(file: Express.Multer.File | undefined, request: CreateOrUpdateComplaint, userId: string) {
@@ -70,6 +71,8 @@ export class ComplaintService {
 
     static async getById(complaintId: string) {
         const complaint = await ServiceUtils.isExistsComplaint(complaintId);
+        const adminFeedbackId = await AdminFeedback.findOne({complaint: complaintId})
+            .select('_id');
 
         const category = await Category.findById(complaint.category).select('_id name');
 
@@ -79,6 +82,7 @@ export class ComplaintService {
 
         const response = toComplaintResponse(complaint);
         response.category = category;
+        response.feedback_id = adminFeedbackId?._id as unknown as string;
         response.tracking_status = toTrackingStatusResponses(trackingStatus);
 
         return response;

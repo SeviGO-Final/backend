@@ -9,6 +9,7 @@ const upload = multer({ storage: multer.memoryStorage() });
 adminFeedbackRoutes.get('/:id', AdminFeedbackController.getFeedback);
 
 adminFeedbackRoutes.use(authMiddleware);
+adminFeedbackRoutes.get('/', AdminFeedbackController.getAll);
 adminFeedbackRoutes.post('/:complaintId', upload.single('attachment'), AdminFeedbackController.create);
 adminFeedbackRoutes.post('/:complaintId/process', AdminFeedbackController.processingComplaint);
 adminFeedbackRoutes.post('/:complaintId/reject', AdminFeedbackController.rejectComplaint);
