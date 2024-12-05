@@ -73,6 +73,7 @@ export class AdminFeedbackService {
 
       // set complaint current_status is done!
       complaint.current_status = currentStatus;
+      complaint.admin_feedback = adminFeedback._id;
       await complaint.save();
 
       // save to tracking status

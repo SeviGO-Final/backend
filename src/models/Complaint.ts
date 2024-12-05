@@ -11,8 +11,7 @@ export interface IComplaint extends Document{
     current_status: string;
     user: Types.ObjectId; // reference to users
     category: Types.ObjectId; // reference to categories
-    // admin_feedback: Types.ObjectId;
-    feedback_id: Types.ObjectId,
+    admin_feedback: Types.ObjectId;
     is_deleted: boolean;
     created_at?: Date,
     updated_at?: Date
@@ -28,6 +27,7 @@ const complaintSchema = new Schema<IComplaint>({
     current_status: { type: String, required: true },
     user: { type: Schema.Types.ObjectId, ref: 'User', required: true }, // relation to User
     category: { type: Schema.Types.ObjectId, ref: 'Category', required: true }, // relation to Category
+    admin_feedback: { type: Schema.Types.ObjectId, ref: 'AdminFeedback', default: null }, // relation to AdminFeedback
     is_deleted: { type: Boolean, required: false, default: false },
 }, {
     timestamps: {

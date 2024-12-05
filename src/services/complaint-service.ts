@@ -70,10 +70,7 @@ export class ComplaintService {
     }
 
     static async getById(complaintId: string) {
-        const complaint = await ServiceUtils.isExistsComplaint(complaintId);
-        const adminFeedbackId = await AdminFeedback.findOne({complaint: complaintId})
-            .select('_id');
-
+        const complaint = await ServiceUtils.isExistsComplaint(complaintId);        
         const category = await Category.findById(complaint.category).select('_id name');
 
         const trackingStatus = await TrackingStatus.find({
@@ -82,7 +79,6 @@ export class ComplaintService {
 
         const response = toComplaintResponse(complaint);
         response.category = category;
-        response.feedback_id = adminFeedbackId?._id as unknown as string;
         response.tracking_status = toTrackingStatusResponses(trackingStatus);
 
         return response;
@@ -90,10 +86,14 @@ export class ComplaintService {
 
     static async getAll(page: number, limit: number) {
         const skip = (page - 1) * limit;
-        const complaints = await Complaint.find().populate('category', '_id name').sort({ updated_at: -1 })
+        const complaints = await Complaint.find()
+            .populate('category', '_id name')
+            .populate('admin_feedback', '_id')
+            .sort({ updated_at: -1 })
             .skip(skip)
             .limit(limit);
 
+        console.log(complaints);
         const totalComplaints = await Complaint.countDocuments();        
         return {
             total: totalComplaints,

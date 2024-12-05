@@ -29,7 +29,7 @@ export type ComplaintResponse = {
     evidence: string;
     current_status: string;
     category: any;
-    feedback_id?: string;
+    admin_feedback?: string;
     tracking_status?: TrackingStatusResponse[];
     is_deleted: boolean;
     created_at?: string,
@@ -61,7 +61,7 @@ export function toComplaintResponse(complaint: any): ComplaintResponse {
         date_event: complaint.date_event.toLocaleString(),
         location: complaint.location,
         evidence: complaint.evidence,
-        feedback_id: complaint.feedback_id,
+        admin_feedback: complaint.admin_feedback?._id,
         current_status: complaint.current_status,
         category: complaint.category,
         is_deleted: complaint.is_deleted,
