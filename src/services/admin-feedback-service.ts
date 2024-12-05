@@ -135,86 +135,79 @@ export class AdminFeedbackService {
       request
     );
     const currentStatus = "rejected";
-
+  
     ServiceUtils.onlyAdminCan(sessionData, "You're not an admin");
     ServiceUtils.isValidObjectId(complaintId);
-
+  
     const complaint = await ServiceUtils.isExistsComplaint(complaintId);
-
-    // check existing tracking status to avoid idempotent request
+  
+    // Check existing tracking status to avoid idempotent request
     await ServiceUtils.isExistingFeedback(
       complaintId,
       currentStatus,
       "Complaint has been rejected before"
     );
-// if no file
-if (!file) {
-  throw new CustomErrors(
-    400,
-    "Bad Request",
-    "Attachment of feedback is required"
-  );
-}
-
-// set file size limits
-if (file.size > ServiceUtils.MAX_SIZE) {
-  throw new CustomErrors(400, "Bad Request", "File size exceeds 2MB limit");
-}
-
-// Save file to disk
-const uploadDir = path.join(__dirname, "../../uploads/feedback");
-const filePath = path.join(
-  __dirname,
-  "../../uploads/feedback",
-  `${Date.now()}-${file.originalname}`
-);
-if (!fs.existsSync(uploadDir)) {
-  await fs.mkdirSync(uploadDir, { recursive: true });
-}
-
-try {
-  // save file
-  fs.writeFileSync(filePath, file!.buffer);
-
-  validRequest.attachment = `uploads/feedback/${path.basename(filePath)}`;
-  validRequest.complaint = complaintId;
-  const adminFeedback = await new AdminFeedback(validRequest).save();
-
-  // set complaint current_status is done!
-  complaint.current_status = currentStatus;
-  await complaint.save();
-
-  // save to tracking status
-  await new TrackingStatus({
-    status: currentStatus,
-    complaint: complaintId,
-    admin: sessionData._id,
-  }).save();
-
-  return toAdminFeedbackResponse(adminFeedback);
-} catch (e) {
-  // delete file if an error occurred
-  if (fs.existsSync(filePath)) fs.unlinkSync(filePath);
-  throw new Error(
-    `Failed to handle file attachment: ${(e as Error).message}`
-  );
-}
-    // set complain current_status
-    complaint.current_status = currentStatus;
-    await complaint.save();
-
-    validRequest.complaint = complaintId;
-    const adminFeedback = await new AdminFeedback(validRequest).save();
-
-    // save to tracking status
-    await new TrackingStatus({
-      status: currentStatus,
-      complaint: complaintId,
-      admin: sessionData._id,
-    }).save();
-
-    return toAdminFeedbackResponse(adminFeedback);
+  
+    // If file is provided, validate and save it
+    let filePath = null; // Default value for attachment
+    if (file) {
+      // Validate file size
+      if (file.size > ServiceUtils.MAX_SIZE) {
+        throw new CustomErrors(400, "Bad Request", "File size exceeds 2MB limit");
+      }
+  
+      // Define upload path
+      const uploadDir = path.join(__dirname, "../../uploads/feedback");
+      filePath = path.join(
+        __dirname,
+        "../../uploads/feedback",
+        `${Date.now()}-${file.originalname}`
+      );
+      if (!fs.existsSync(uploadDir)) {
+        await fs.mkdirSync(uploadDir, { recursive: true });
+      }
+  
+      try {
+        // Save file to disk
+        fs.writeFileSync(filePath, file.buffer);
+  
+        // Set attachment path
+        validRequest.attachment = `uploads/feedback/${path.basename(filePath)}`;
+      } catch (e) {
+        // Delete file if an error occurs during save
+        if (fs.existsSync(filePath)) fs.unlinkSync(filePath);
+        throw new Error(
+          `Failed to handle file attachment: ${(e as Error).message}`
+        );
+      }
+    } else {
+      // If no file, set attachment as null
+      validRequest.attachment = undefined;
+    }
+  
+    try {
+      validRequest.complaint = complaintId;
+      const adminFeedback = await new AdminFeedback(validRequest).save();
+  
+      // Set complaint current_status to rejected
+      complaint.current_status = currentStatus;
+      await complaint.save();
+  
+      // Save to tracking status
+      await new TrackingStatus({
+        status: currentStatus,
+        complaint: complaintId,
+        admin: sessionData._id,
+      }).save();
+  
+      return toAdminFeedbackResponse(adminFeedback);
+    } catch (e) {
+      // Delete file if an error occurs
+      if (filePath && fs.existsSync(filePath)) fs.unlinkSync(filePath);
+      throw e;
+    }
   }
+  
   static async getFeedback(feedbackId: string) {
     const feedback = await AdminFeedback.findById(feedbackId);
     if(!feedback) {
