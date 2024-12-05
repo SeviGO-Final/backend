@@ -125,6 +125,7 @@ export class AdminFeedbackService {
   }
 
   static async rejectComplaint(
+    file: Express.Multer.File | undefined,
     request: CreateAdminFeedback,
     complaintId: string,
     sessionData: UserSessionData
@@ -146,7 +147,58 @@ export class AdminFeedbackService {
       currentStatus,
       "Complaint has been rejected before"
     );
+// if no file
+if (!file) {
+  throw new CustomErrors(
+    400,
+    "Bad Request",
+    "Attachment of feedback is required"
+  );
+}
 
+// set file size limits
+if (file.size > ServiceUtils.MAX_SIZE) {
+  throw new CustomErrors(400, "Bad Request", "File size exceeds 2MB limit");
+}
+
+// Save file to disk
+const uploadDir = path.join(__dirname, "../../uploads/feedback");
+const filePath = path.join(
+  __dirname,
+  "../../uploads/feedback",
+  `${Date.now()}-${file.originalname}`
+);
+if (!fs.existsSync(uploadDir)) {
+  await fs.mkdirSync(uploadDir, { recursive: true });
+}
+
+try {
+  // save file
+  fs.writeFileSync(filePath, file!.buffer);
+
+  validRequest.attachment = `uploads/feedback/${path.basename(filePath)}`;
+  validRequest.complaint = complaintId;
+  const adminFeedback = await new AdminFeedback(validRequest).save();
+
+  // set complaint current_status is done!
+  complaint.current_status = currentStatus;
+  await complaint.save();
+
+  // save to tracking status
+  await new TrackingStatus({
+    status: currentStatus,
+    complaint: complaintId,
+    admin: sessionData._id,
+  }).save();
+
+  return toAdminFeedbackResponse(adminFeedback);
+} catch (e) {
+  // delete file if an error occurred
+  if (fs.existsSync(filePath)) fs.unlinkSync(filePath);
+  throw new Error(
+    `Failed to handle file attachment: ${(e as Error).message}`
+  );
+}
     // set complain current_status
     complaint.current_status = currentStatus;
     await complaint.save();

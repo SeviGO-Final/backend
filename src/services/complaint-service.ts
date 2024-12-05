@@ -152,30 +152,33 @@ export class ComplaintService {
         }
     }
 
-    static async deleteOneHistory(complaintId: string, userId: string) {
+    static async deleteOneHistory(complaintId: string, userId: string, userRole: string) {
         const complaint = await ServiceUtils.isExistsComplaint(complaintId);
-        if (complaint.user.toString() !== userId) {
-            throw new CustomErrors(403, 'Forbidden', 'You are not the owner of this complaint');
+        if (userRole !== 'admin') {
+            throw new CustomErrors(403, 'Forbidden', 'Only admin can perform this action');
         }
 
-        await Complaint.updateOne({ user: userId, _id: complaintId }, { is_deleted: true });
+        await Complaint.updateOne({ _id: complaintId }, { is_deleted: true });
         return {
             complaint_id: complaintId,
             deleted_from_history: true,
         };
     }
 
-    static async deleteAllHistories(userId: string) {
+    static async deleteAllHistories(userId: string, userRole: string) {
+        if (userRole !== 'admin') {
+            throw new CustomErrors(403, 'Forbidden', 'Only admin can perform this action');
+        }
         await Complaint.updateMany({ user: userId }, { is_deleted: true });
         return {
             histories_deleted: true,
         };
     }
 
-    static async delete(complaintId: string, userId: string) {
+    static async delete(complaintId: string, userId: string, userRole: string) {
         const complaint = await ServiceUtils.isExistsComplaint(complaintId);
-        if (complaint.user.toString() !== userId) {
-            throw new CustomErrors(403, 'Forbidden', 'You are not the owner of this complaint');
+        if (userRole !== 'admin') {
+            throw new CustomErrors(403, 'Forbidden', 'Only admin can perform this action');
         }
 
         await Complaint.deleteOne({ _id: complaintId });

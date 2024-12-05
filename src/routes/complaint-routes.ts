@@ -10,8 +10,9 @@ complaintRoutes.get('/:id', ComplaintController.getById);
 complaintRoutes.get('/', ComplaintController.getAll);
 
 complaintRoutes.use(authMiddleware);
-complaintRoutes.post('/', upload.single('evidence'), ComplaintController.create);
-complaintRoutes.delete('/histories/all', ComplaintController.deleteAllHistories); // delete all complaint's histories
-complaintRoutes.patch('/:id', upload.single('evidence'), ComplaintController.update);
-complaintRoutes.delete('/:id/histories', ComplaintController.deleteOneHistory); // delete one complaint's history
-complaintRoutes.delete('/:id', ComplaintController.delete); // delete a complaint permanently in database
+complaintRoutes.post('/', upload.single('evidence'), ComplaintController.create as express.RequestHandler);
+complaintRoutes.delete('/histories/all', ComplaintController.deleteAllHistories as express.RequestHandler);
+complaintRoutes.delete('/:id/histories', ComplaintController.deleteOneHistory as express.RequestHandler);
+complaintRoutes.delete('/:id', ComplaintController.delete as express.RequestHandler);
+complaintRoutes.patch('/:id', upload.single('evidence'), ComplaintController.update as express.RequestHandler);
+// delete a complaint permanently in database

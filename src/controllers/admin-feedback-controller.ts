@@ -39,13 +39,14 @@ export class AdminFeedbackController {
 
     static async rejectComplaint(req: CustomRequest, res: Response, next: NextFunction) {
         try {
+            const file = req.file;
             const complaintId = req.params.complaintId;
             const sessionData = req.session.user as UserSessionData;
             const request = req.body as CreateAdminFeedback;
             console.log(request)
 
 
-            const adminFeedback = await AdminFeedbackService.rejectComplaint(request, complaintId, sessionData);
+            const adminFeedback = await AdminFeedbackService.rejectComplaint(file, request, complaintId, sessionData);
             res.status(200).json(
                 toAPIResponse(200, 'OK', adminFeedback, 'Complaint is rejected')
             );

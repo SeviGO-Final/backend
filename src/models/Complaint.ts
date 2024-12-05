@@ -12,6 +12,7 @@ export interface IComplaint extends Document{
     user: Types.ObjectId; // reference to users
     category: Types.ObjectId; // reference to categories
     // admin_feedback: Types.ObjectId;
+    feedback_id: Types.ObjectId,
     is_deleted: boolean;
     created_at?: Date,
     updated_at?: Date

@@ -12,4 +12,4 @@ adminFeedbackRoutes.use(authMiddleware);
 adminFeedbackRoutes.get('/', AdminFeedbackController.getAll);
 adminFeedbackRoutes.post('/:complaintId', upload.single('attachment'), AdminFeedbackController.create);
 adminFeedbackRoutes.post('/:complaintId/process', AdminFeedbackController.processingComplaint);
-adminFeedbackRoutes.post('/:complaintId/reject', AdminFeedbackController.rejectComplaint);
+adminFeedbackRoutes.post('/:complaintId/reject',upload.single('attachment'), AdminFeedbackController.rejectComplaint);

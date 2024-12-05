@@ -77,7 +77,16 @@ export class ComplaintController {
     static async deleteAllHistories(req: CustomRequest, res: Response, next: NextFunction) {
         try {
             const userId = (req.session.user as UserSessionData)._id;
-            const deleteHistory = await ComplaintService.deleteAllHistories(userId);
+            const userRole = (req.session.user as UserSessionData).role;
+    
+            // Periksa apakah pengguna adalah admin
+            if (userRole !== 'admin') {
+                return res.status(403).json(
+                    toAPIResponse(403, 'Forbidden', null, 'Only admin can perform this action')
+                );
+            }
+    
+            const deleteHistory = await ComplaintService.deleteAllHistories(userId, userRole);
             res.status(200).json(
                 toAPIResponse(200, 'OK', deleteHistory, "Complaint's histories deleted")
             );
@@ -89,8 +98,15 @@ export class ComplaintController {
     static async deleteOneHistory(req: CustomRequest, res: Response, next: NextFunction) {
         try {
             const userId = (req.session.user as UserSessionData)._id;
+            const userRole = (req.session.user as UserSessionData).role;
             const complaintId = req.params.id;
-            const deleteHistory = await ComplaintService.deleteOneHistory(complaintId, userId);
+            const deleteHistory = await ComplaintService.deleteOneHistory(complaintId, userId, userRole);
+            if (userRole !== 'admin') {
+                return res.status(403).json(
+                    toAPIResponse(403, 'Forbidden', null, 'Only admin can perform this action')
+                );
+            }
+    
             res.status(200).json(
                 toAPIResponse(200, 'OK', deleteHistory, "Complaint's history deleted")
             );
@@ -102,8 +118,14 @@ export class ComplaintController {
     static async delete(req: CustomRequest, res: Response, next: NextFunction) {
         try {
             const userId = (req.session.user as UserSessionData)._id;
+            const userRole = (req.session.user as UserSessionData).role;
             const complaintId = req.params.id;
-            const deletedComplaint = await ComplaintService.delete(complaintId, userId);
+            const deletedComplaint = await ComplaintService.delete(complaintId, userId, userRole);
+            if (userRole !== 'admin') {
+                return res.status(403).json(
+                    toAPIResponse(403, 'Forbidden', null, 'Only admin can perform this action')
+                );
+            }
             res.status(200).json(
                 toAPIResponse(200, 'OK', deletedComplaint, 'Complaint deleted')
             );
