@@ -245,7 +245,7 @@ const adminFeedbackPaths = {
       tags: ["Admin Feedback"],
       summary: "Process a complaint by admin",
       description:
-        "This endpoint allows an admin to change the status of a complaint to 'processing'.",
+        "This endpoint allows an admin to change the status of a complaint to 'Processing'.",
       security: [
         {
           bearerAuth: [],
@@ -266,7 +266,7 @@ const adminFeedbackPaths = {
       ],
       responses: {
         "200": {
-          description: "Complaint status successfully updated to 'processing'",
+          description: "Complaint status successfully updated to 'Processing'",
           content: {
             "application/json": {
               schema: {
@@ -297,7 +297,7 @@ const adminFeedbackPaths = {
                         example:
                           "uploads/complaints/1731458107118-laser-fiber.png",
                       },
-                      current_status: { type: "string", example: "processing" },
+                      current_status: { type: "string", example: "Processing" },
                       is_deleted: { type: "boolean", example: false },
                       created_at: {
                         type: "string",
@@ -347,7 +347,7 @@ const adminFeedbackPaths = {
     post: {
       tags: ["Admin Feedback"],
       summary: "Reject a complaint by admin",
-      description: "This endpoint allows an admin to reject a complaint and update the status to 'rejected' with a rejection feedback.",
+      description: "This endpoint allows an admin to reject a complaint and update the status to 'Rejected' with a rejection feedback.",
       security: [
         {
           bearerAuth: [],
@@ -359,7 +359,7 @@ const adminFeedbackPaths = {
           name: "complaintId",
           in: "path",
           required: true,
-          description: "The ID of the complaint that is being rejected.",
+          description: "The ID of the complaint that is being Rejected.",
           schema: {
             type: "string",
             example: "60d9f87c776f5f5b45c3c8f1", // Example of a complaintId
@@ -384,7 +384,7 @@ const adminFeedbackPaths = {
       },
       responses: {
         "200": {
-          description: "Complaint successfully rejected",
+          description: "Complaint successfully Rejected",
           content: {
             "application/json": {
               schema: {
@@ -392,7 +392,7 @@ const adminFeedbackPaths = {
                 properties: {
                   code: { type: "number", example: 200 },
                   status: { type: "string", example: "OK" },
-                  message: { type: "string", example: "Complaint is rejected" },
+                  message: { type: "string", example: "Complaint is Rejected" },
                   data: {
                     type: "object",
                     properties: {
@@ -427,7 +427,7 @@ const adminFeedbackPaths = {
           },
         },
         "404": {
-          description: "Not Found - Complaint not found or already rejected",
+          description: "Not Found - Complaint not found or already Rejected",
           content: {
             "application/json": {
               schema: {
@@ -435,7 +435,7 @@ const adminFeedbackPaths = {
                 properties: {
                   code: { type: "number", example: 404 },
                   status: { type: "string", example: "Not Found" },
-                  errors: { type: "string", example: "Complaint not found or already rejected" },
+                  errors: { type: "string", example: "Complaint not found or already Rejected" },
                 },
               },
             },

@@ -25,7 +25,7 @@ export class AdminFeedbackService {
       AdminFeedbackValidation.CREATE,
       request
     );
-    const currentStatus = "accepted";
+    const currentStatus = "Finished";
 
     ServiceUtils.onlyAdminCan(sessionData, "You're not an admin");
     ServiceUtils.isValidObjectId(complaintId);
@@ -93,11 +93,11 @@ export class AdminFeedbackService {
     }
   }
 
-  static async processingComplaint(
+  static async ProcessingComplaint(
     complaintId: string,
     sessionData: UserSessionData
   ) {
-    const currentStatus = "processing";
+    const currentStatus = "Processing";
 
     ServiceUtils.onlyAdminCan(sessionData, "You're not an admin");
     ServiceUtils.isValidObjectId(complaintId);
@@ -135,7 +135,7 @@ export class AdminFeedbackService {
       AdminFeedbackValidation.CREATE,
       request
     );
-    const currentStatus = "rejected";
+    const currentStatus = "Rejected";
   
     ServiceUtils.onlyAdminCan(sessionData, "You're not an admin");
     ServiceUtils.isValidObjectId(complaintId);
@@ -146,7 +146,7 @@ export class AdminFeedbackService {
     await ServiceUtils.isExistingFeedback(
       complaintId,
       currentStatus,
-      "Complaint has been rejected before"
+      "Complaint has been Rejected before"
     );
   
     // If file is provided, validate and save it
@@ -190,8 +190,9 @@ export class AdminFeedbackService {
       validRequest.complaint = complaintId;
       const adminFeedback = await new AdminFeedback(validRequest).save();
   
-      // Set complaint current_status to rejected
+      // Set complaint current_status to Rejected
       complaint.current_status = currentStatus;
+      complaint.admin_feedback = adminFeedback._id;
       await complaint.save();
   
       // Save to tracking status

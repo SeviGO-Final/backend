@@ -65,21 +65,21 @@ export class StatisticsService {
     };
   }
 
-  static async totalComplaintHasAccepted() {
+  static async totalComplaintHasFinished() {
     return {
-      total: await Complaint.countDocuments({ current_status: "accepted" }),
+      total: await Complaint.countDocuments({ current_status: "Finished" }),
     };
   }
 
   static async totalComplaintHasRejected() {
     return {
-      total: await Complaint.countDocuments({ current_status: "rejected" }),
+      total: await Complaint.countDocuments({ current_status: "Rejected" }),
     };
   }
 
   static async totalComplaintInProcessing() {
     return {
-      total: await Complaint.countDocuments({ current_status: "processing" }),
+      total: await Complaint.countDocuments({ current_status: "Processing" }),
     };
   }
 

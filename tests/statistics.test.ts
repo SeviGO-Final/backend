@@ -44,17 +44,17 @@ describe("Statistics Service", () => {
     expect(AdminFeedback.countDocuments).toHaveBeenCalledTimes(1);
   });
 
-  it("should return total number of complaints accepted", async () => {
-    const mockComplaintsAcceptedCount = 2;
-    (Complaint.countDocuments as jest.Mock).mockResolvedValue(mockComplaintsAcceptedCount);
+  it("should return total number of complaints Finished", async () => {
+    const mockComplaintsFinishedCount = 2;
+    (Complaint.countDocuments as jest.Mock).mockResolvedValue(mockComplaintsFinishedCount);
 
-    const result = await StatisticsService.totalComplaintHasAccepted();
+    const result = await StatisticsService.totalComplaintHasFinished();
 
     expect(result).toEqual({ total: 2 });
     expect(Complaint.countDocuments).toHaveBeenCalledTimes(1);
   });
 
-  it("should return total number of complaints rejected", async () => {
+  it("should return total number of complaints Rejected", async () => {
     const mockComplaintsRejectedCount = 1;
     (Complaint.countDocuments as jest.Mock).mockResolvedValue(mockComplaintsRejectedCount);
 
@@ -64,7 +64,7 @@ describe("Statistics Service", () => {
     expect(Complaint.countDocuments).toHaveBeenCalledTimes(1);
   });
 
-  it("should return total number of complaints in processing", async () => {
+  it("should return total number of complaints in Processing", async () => {
     const mockComplaintsProcessingCount = 2;
     (Complaint.countDocuments as jest.Mock).mockResolvedValue(mockComplaintsProcessingCount);
 

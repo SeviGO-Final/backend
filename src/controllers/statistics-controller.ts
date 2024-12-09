@@ -46,29 +46,29 @@ export class StatisticsController {
       res
         .status(200)
         .json(
-          toAPIResponse(200, "OK", totalComplaint, "Total complaints submitted")
+          toAPIResponse(200, "OK", totalComplaint, "Total complaints Submitted")
         );
     } catch (err) {
       next(err);
     }
   }
 
-  static async totalComplaintsHasAccepted(
+  static async totalComplaintsHasFinished(
     req: Request,
     res: Response,
     next: NextFunction
   ) {
     try {
-      const totalComplaintHasAccepted =
-        await StatisticsService.totalComplaintHasAccepted();
+      const totalComplaintHasFinished =
+        await StatisticsService.totalComplaintHasFinished();
       res
         .status(200)
         .json(
           toAPIResponse(
             200,
             "OK",
-            totalComplaintHasAccepted,
-            "Total complaint has been accepted"
+            totalComplaintHasFinished,
+            "Total complaint has been Finished"
           )
         );
     } catch (err) {
@@ -91,7 +91,7 @@ export class StatisticsController {
             200,
             "OK",
             totalComplaintHasRejected,
-            "Total complaint has been rejected"
+            "Total complaint has been Rejected"
           )
         );
     } catch (err) {
@@ -128,7 +128,7 @@ export class StatisticsController {
       res
         .status(200)
         .json(
-          toAPIResponse(200, "OK", totalFeedback, "Total feedback submitted")
+          toAPIResponse(200, "OK", totalFeedback, "Total feedback Submitted")
         );
     } catch (err) {
       next(err);

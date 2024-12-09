@@ -23,12 +23,12 @@ export class AdminFeedbackController {
         }
     }
 
-    static async processingComplaint(req: CustomRequest, res: Response, next: NextFunction) {
+    static async ProcessingComplaint(req: CustomRequest, res: Response, next: NextFunction) {
         try {
             const complaintId = req.params.complaintId;
             const sessionData = req.session.user as UserSessionData;
 
-            const adminFeedback = await AdminFeedbackService.processingComplaint(complaintId, sessionData);
+            const adminFeedback = await AdminFeedbackService.ProcessingComplaint(complaintId, sessionData);
             res.status(200).json(
                 toAPIResponse(200, 'OK', adminFeedback, 'Complaint is in process')
             );
@@ -48,7 +48,7 @@ export class AdminFeedbackController {
 
             const adminFeedback = await AdminFeedbackService.rejectComplaint(file, request, complaintId, sessionData);
             res.status(200).json(
-                toAPIResponse(200, 'OK', adminFeedback, 'Complaint is rejected')
+                toAPIResponse(200, 'OK', adminFeedback, 'Complaint is Rejected')
             );
         } catch (e) {
             next(e);

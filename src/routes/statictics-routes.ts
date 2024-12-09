@@ -11,14 +11,14 @@ staticticsRoutes.get("/users", StatisticsController.totalUsers);
 staticticsRoutes.get("/feedbacks", StatisticsController.totalFeedback);
 staticticsRoutes.get("/complaints", StatisticsController.totalComplaints);
 staticticsRoutes.get(
-  "/complaints-accepted",
-  StatisticsController.totalComplaintsHasAccepted
+  "/complaints-Finished",
+  StatisticsController.totalComplaintsHasFinished
 );
 staticticsRoutes.get(
-  "/complaints-rejected",
+  "/complaints-Rejected",
   StatisticsController.totalComplaintsHasRejected
 );
 staticticsRoutes.get(
-  "/complaints-processing",
+  "/complaints-Processing",
   StatisticsController.totalComplaintsInProcessing
 );
