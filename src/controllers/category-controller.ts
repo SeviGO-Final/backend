@@ -2,15 +2,22 @@ import { Request, Response, NextFunction } from "express";
 import { categoryService } from "../services/category-service";
 import { createCategorySchema } from "../validations/category-validation";
 import { toAPIResponse } from "../formatters/api-response";
-import {UserSessionData} from "../formatters/user-formatter";
 import {CustomRequest} from "../types/custom-request";
+import { Category } from "../models/Category";
 
 export class CategoryController {
   async createCategory(req: CustomRequest, res: Response, next: NextFunction): Promise<void> {
     try {
-      const sessionData = (req.session.user as UserSessionData);
       const { name } = createCategorySchema.parse(req.body);
-      const newCategory = await categoryService.createCategory(name, sessionData);
+      const existingCategory = await Category.findOne({ name });
+      if (existingCategory) {
+        res.status(400).json(
+          toAPIResponse(400, "Bad Request", null, "name must be unique")
+        );
+        return;
+      }
+  
+      const newCategory = await categoryService.createCategory(name);
       res.status(201).json(
         toAPIResponse(201, "Created", newCategory, "Category created successfully")
       );
@@ -32,7 +39,6 @@ export class CategoryController {
 
   async getCategoryById(req: CustomRequest, res: Response, next: NextFunction): Promise<void> {
     try {
-      const sessionData = (req.session.user as UserSessionData);
       const { id } = req.params;
       const category = await categoryService.getCategoryById(id);
       if (!category) {
@@ -51,10 +57,9 @@ export class CategoryController {
 
   async updateCategory(req: CustomRequest, res: Response, next: NextFunction): Promise<void> {
     try {
-      const sessionData = (req.session.user as UserSessionData);
       const { id } = req.params;
       const { name } = createCategorySchema.parse(req.body);
-      const updatedCategory = await categoryService.updateCategory(id, name, sessionData);
+      const updatedCategory = await categoryService.updateCategory(id, name);
       if (!updatedCategory) {
         res.status(404).json(
           toAPIResponse(404, "Not Found", null, "Category not found")
@@ -71,9 +76,8 @@ export class CategoryController {
 
   async deleteCategory(req: CustomRequest, res: Response, next: NextFunction): Promise<void> {
     try {
-      const sessionData = (req.session.user as UserSessionData);
       const { id } = req.params;
-      const deletedCategory = await categoryService.deleteCategory(id, sessionData);
+      const deletedCategory = await categoryService.deleteCategory(id);
       if (!deletedCategory) {
         res.status(404).json(
           toAPIResponse(404, "Not Found", null, "Category not found")

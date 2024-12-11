@@ -1,4 +1,3 @@
-// @ts-ignore
 import request from 'supertest';
 import {app} from "../src";
 import mongoose from 'mongoose';
@@ -27,14 +26,22 @@ describe('Category CRUD Operations', () => {
     });
 
     it('should return an error if category name is duplicated', async () => {
-      await request(app).post('/api/categories').send({ name: 'Duplicate' });
+      const categoryData = { name: 'Kesehatan' };
+    
+      // Membuat kategori pertama
+      await request(app)
+        .post('/api/categories')
+        .send(categoryData);
+    
+      // Mencoba membuat kategori dengan nama yang sama
       const response = await request(app)
         .post('/api/categories')
-        .send({ name: 'Duplicate' })
-        .expect(400);
-
-        expect(response.body.errors).toContain('name must be unique');
+        .send(categoryData);
+    
+      expect(response.status).toBe(400); // Harus 400 Bad Request
+      expect(response.body.message).toBe('name must be unique'); // Periksa apakah message yang tepat ada
     });
+    
   });
 
   describe('GET /api/categories', () => {
