@@ -2,14 +2,18 @@ import mongoose from 'mongoose';
 import User from "../models/User";
 import bcrypt from "bcryptjs";
 import {getEnv} from "../utils/getenv";
+import { MongoClient } from "mongodb"
 class DatabaseConfig {
   connectToDatabase = async (): Promise<void> => {
     try {
       if (!process.env.MONGO_URI) {
         throw new Error('MONGO_URI is undefined. Check for mongo_URI');
       }
+
+      const client = new MongoClient(process.env.MONGO_URI)
       await mongoose.connect(process.env.MONGO_URI, {});
       console.log('Connected to MongoDB Atlas');
+      client.db('user1_database') //akses mongoDB dari Productzilla
     } catch (error) {
       console.error('Connection error: ', error);
     }
