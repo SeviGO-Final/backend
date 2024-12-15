@@ -74,23 +74,6 @@ export class CategoryController {
     }
   }
 
-  async deleteCategory(req: CustomRequest, res: Response, next: NextFunction): Promise<void> {
-    try {
-      const { id } = req.params;
-      const deletedCategory = await categoryService.deleteCategory(id);
-      if (!deletedCategory) {
-        res.status(404).json(
-          toAPIResponse(404, "Not Found", null, "Category not found")
-        );
-        return;
-      }
-      res.status(200).json(
-        toAPIResponse(200, "Success", null, "Category successfully deleted")
-      );
-    } catch (error) {
-      next(error); 
-    }
-  }
 }
 
 export const categoryController = new CategoryController();

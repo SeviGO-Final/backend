@@ -18,9 +18,6 @@ export class CategoryService {
     return await Category.findByIdAndUpdate(id, { name }, { new: true });
   }
 
-  async deleteCategory(id: string): Promise<ICategory | null> {
-    return await Category.findByIdAndDelete(id);
-  }
 }
 
 export const categoryService = new CategoryService();
