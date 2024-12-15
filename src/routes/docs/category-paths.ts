@@ -308,63 +308,63 @@ const categoryPaths = {
         },
       },
     },
-    delete: {
-      tags: ["Category Endpoints"],
-      summary: "Delete a category by ID",
-      description: "This endpoint deletes a category by its ID.",
-      security: [
-        {
-          bearerAuth: [],
-        },
-      ],
-      parameters: [
-        {
-          name: "id",
-          in: "path",
-          required: true,
-          description: "The ID of the category to delete",
-          schema: {
-            type: "string",
-            example: "60d0fe4f5311236168a109ca",
-          },
-        },
-      ],
-      responses: {
-        "200": {
-          description: "Category deleted successfully",
-          content: {
-            "application/json": {
-              schema: {
-                type: "object",
-                properties: {
-                  code: { type: "number", example: 200 },
-                  status: { type: "string", example: "OK" },
-                  message: {
-                    type: "string",
-                    example: "Category deleted successfully",
-                  },
-                },
-              },
-            },
-          },
-        },
-        "404": {
-          description: "Category not found",
-          content: {
-            "application/json": {
-              schema: {
-                type: "object",
-                properties: {
-                  code: { type: "number", example: 404 },
-                  status: { type: "string", example: "Not Found" },
-                  errors: { type: "string", example: "Category not found" },
-                },
-              },
-            },
-          },
-        },
-      },
-    },
+    // delete: {
+    //   tags: ["Category Endpoints"],
+    //   summary: "Delete a category by ID",
+    //   description: "This endpoint deletes a category by its ID.",
+    //   security: [
+    //     {
+    //       bearerAuth: [],
+    //     },
+    //   ],
+    //   parameters: [
+    //     {
+    //       name: "id",
+    //       in: "path",
+    //       required: true,
+    //       description: "The ID of the category to delete",
+    //       schema: {
+    //         type: "string",
+    //         example: "60d0fe4f5311236168a109ca",
+    //       },
+    //     },
+    //   ],
+    //   responses: {
+    //     "200": {
+    //       description: "Category deleted successfully",
+    //       content: {
+    //         "application/json": {
+    //           schema: {
+    //             type: "object",
+    //             properties: {
+    //               code: { type: "number", example: 200 },
+    //               status: { type: "string", example: "OK" },
+    //               message: {
+    //                 type: "string",
+    //                 example: "Category deleted successfully",
+    //               },
+    //             },
+    //           },
+    //         },
+    //       },
+    //     },
+    //     "404": {
+    //       description: "Category not found",
+    //       content: {
+    //         "application/json": {
+    //           schema: {
+    //             type: "object",
+    //             properties: {
+    //               code: { type: "number", example: 404 },
+    //               status: { type: "string", example: "Not Found" },
+    //               errors: { type: "string", example: "Category not found" },
+    //             },
+    //           },
+    //         },
+    //       },
+    //     },
+    //   },
+    // },
   },
 };
 
